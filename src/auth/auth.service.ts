@@ -35,7 +35,7 @@ export class AuthService {
             if (isPasswordValid) {
                 return {
                     ...user,
-                    id: user.id.toString(), // Convert id to string
+                    id: user.id,
                     password: undefined,
                 };
             }

@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUser } from './DTO/create-user-dto';
 import * as bcrypt from 'bcrypt';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -40,6 +41,25 @@ export class UserService {
             }
         });
         return user;
+    }
+
+    async deleteUser(id: string): Promise<User> {
+
+        const userExist = await this.prisma.user.findFirst({
+            where: {
+                id
+            }
+        })
+
+        if (!userExist) {
+            throw new BadRequestException("User does not exist!");
+        }
+
+        return await this.prisma.user.delete({
+            where: {
+                id: id
+            }
+        })
     }
 
     findByEmail(email: string) {
