@@ -23,7 +23,6 @@ export class CompanyController {
     @Post("create")
     async createCompany(@Body() createCompany: CreateCompany, @Res() resp: Response) {
         try {
-            console.log(createCompany);
             const company = await this.companyService.createCompany(createCompany);
             return resp.status(HttpStatus.CREATED).json({ message: "Company created successfully!", data: company });
         } catch (error) {
