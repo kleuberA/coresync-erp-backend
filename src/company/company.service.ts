@@ -13,13 +13,21 @@ export class CompanyService {
                 name: true,
                 phone: true,
                 address: true,
-                users: true,
+                roles: true,
+                users: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                    }
+                },
             }
         });
         return companies;
     }
 
     async createCompany(createCompany: CreateCompany) {
+
         const companyExist = await this.prisma.company.findFirst({
             where: {
                 name: createCompany.name
@@ -36,9 +44,33 @@ export class CompanyService {
             data: {
                 name: createCompany.name,
                 phone: createCompany.phone,
-                users: { create: [] }
+                users: {
+                    connect: {
+                        id: createCompany.idUser,
+                    }
+                },
             }
         });
+
+        const role = await this.prisma.role.create({
+            data: {
+                name: "admin_company",
+                companyId: createdCompany.id
+            }
+        })
+
+        await this.prisma.user.update({
+            where: {
+                id: createCompany.idUser,
+            },
+            data: {
+                roles: {
+                    connect: {
+                        id: role.id,
+                    },
+                }
+            }
+        })
 
         const createdAddress = await this.prisma.address.create({
             data: {
@@ -49,7 +81,6 @@ export class CompanyService {
                 companyId: createdCompany.id,
             }
         });
-
         const updatedCompany = await this.prisma.company.update({
             where: {
                 id: createdCompany.id,
@@ -66,7 +97,14 @@ export class CompanyService {
                 name: true,
                 phone: true,
                 address: true,
-                users: true,
+                users: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                    }
+                },
+                roles: true
             }
         });
 

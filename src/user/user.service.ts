@@ -15,6 +15,8 @@ export class UserService {
                 id: true,
                 name: true,
                 email: true,
+                company: true,
+                roles: true
             }
         });
         return users;
@@ -38,8 +40,9 @@ export class UserService {
             data: {
                 name: createUser.name,
                 email: createUser.email,
-                password: newPassword
-            }
+                password: newPassword,
+                roles: { create: [{ name: 'user' }] },
+            },
         });
         return user;
     }

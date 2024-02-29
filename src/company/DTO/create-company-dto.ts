@@ -6,6 +6,9 @@ import { Company } from "../entity/company.entity";
 export class CreateCompany extends Company {
 
     @IsString()
+    idUser: string
+
+    @IsString()
     @MaxLength(50, { message: "Company name is too long!" })
     @MinLength(3, { message: "Company name is too short!" })
     name: string;

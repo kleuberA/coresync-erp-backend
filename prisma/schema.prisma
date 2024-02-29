@@ -12,16 +12,26 @@ model User {
   email     String   @unique
   name      String?
   password  String
-  company   Company? @relation(fields: [companyId], references: [id])
   companyId String?
+  roles     Role[]   @relation("UserRoles")
+  company   Company? @relation(fields: [companyId], references: [id])
 }
 
 model Company {
   id      String   @id @default(uuid())
   name    String
-  users   User[]
-  address Address?
   phone   String
+  address Address?
+  roles   Role[]
+  users   User[]
+}
+
+model Role {
+  id        String   @id @default(uuid())
+  name      String
+  companyId String?
+  Company   Company? @relation(fields: [companyId], references: [id])
+  users     User[]   @relation("UserRoles")
 }
 
 model Address {
@@ -30,6 +40,6 @@ model Address {
   city      String
   state     String
   zip       String
-  company   Company @relation(fields: [companyId], references: [id])
   companyId String  @unique
+  company   Company @relation(fields: [companyId], references: [id])
 }
