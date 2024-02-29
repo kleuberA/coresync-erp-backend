@@ -8,8 +8,28 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  name     String?
-  password String
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+}
+
+model Company {
+  id      String   @id @default(uuid())
+  name    String
+  users   User[]
+  address Address?
+  phone   String
+}
+
+model Address {
+  id        String  @id @default(uuid())
+  street    String
+  city      String
+  state     String
+  zip       String
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId String  @unique
 }
