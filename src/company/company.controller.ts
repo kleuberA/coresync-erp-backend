@@ -8,7 +8,6 @@ import { UpdateCompany } from './DTO/update-company-dto';
 @Controller('company')
 export class CompanyController {
     constructor(private readonly companyService: CompanyService) { }
-
     @IsPublic()
     @Get()
     async getCompanies(@Res() resp: Response) {
@@ -20,7 +19,6 @@ export class CompanyController {
         }
     }
 
-    @IsPublic()
     @Post("create")
     async createCompany(@Body() createCompany: CreateCompany, @Res() resp: Response) {
         try {
@@ -31,7 +29,6 @@ export class CompanyController {
         }
     }
 
-    @IsPublic()
     @Delete("delete/:id")
     async deleteCompany(@Param() params, @Res() resp: Response) {
         try {
@@ -42,7 +39,6 @@ export class CompanyController {
         }
     }
 
-    @IsPublic()
     @Patch("update/:id")
     async updateCompany(@Param() params, @Body() updateCompany: UpdateCompany, @Res() resp: Response) {
         try {
