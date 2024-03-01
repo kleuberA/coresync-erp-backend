@@ -1,6 +1,7 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCompany } from './DTO/create-company-dto';
 import { Injectable } from '@nestjs/common';
+import { UpdateCompany } from './DTO/update-company-dto';
 
 @Injectable()
 export class CompanyService {
@@ -109,6 +110,78 @@ export class CompanyService {
         });
 
         return updatedCompany;
+    }
+
+    async updateCompany(idCompany: string, updateCompany: UpdateCompany) {
+        const companyExist = await this.prisma.company.findUnique({
+            where: {
+                id: idCompany,
+            },
+            include: {
+                address: true
+            }
+        });
+
+        if (!companyExist) throw new Error("Company does not exist!");
+
+        const userPermission = await this.prisma.user.findFirst({
+            where: {
+                id: updateCompany.idUser,
+                companyId: idCompany
+            },
+            select: {
+                roles: {
+                    where: {
+                        name: 'admin_company'
+                    }
+                }
+            }
+        });
+
+        if (!userPermission) throw new Error("User does not have permission to update the company!");
+
+        const address = updateCompany.address;
+
+        if (address) {
+            await this.prisma.address.update({
+                where: {
+                    id: companyExist.address.id,
+                },
+                data: {
+                    street: address.street,
+                    city: address.city,
+                    state: address.state,
+                    zip: address.zip,
+                }
+            });
+        }
+
+        const updatedCompany = await this.prisma.company.update({
+            where: {
+                id: idCompany,
+            },
+            data: {
+                name: updateCompany.name,
+                phone: updateCompany.phone,
+            },
+            select: {
+                id: true,
+                name: true,
+                phone: true,
+                address: true,
+                users: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                    }
+                },
+                roles: true
+            }
+        });
+
+        return updatedCompany;
+
     }
 
     async deleteCompany(companyId: string) {

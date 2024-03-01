@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { Response } from 'express';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { CreateCompany } from './DTO/create-company-dto';
+import { UpdateCompany } from './DTO/update-company-dto';
 
 @Controller('company')
 export class CompanyController {
@@ -38,6 +39,17 @@ export class CompanyController {
             return resp.status(HttpStatus.OK).json({ message: "Company deleted successfully!" });
         } catch (error) {
             return resp.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to delete company!", error: error.message });
+        }
+    }
+
+    @IsPublic()
+    @Patch("update/:id")
+    async updateCompany(@Param() params, @Body() updateCompany: UpdateCompany, @Res() resp: Response) {
+        try {
+            const company = await this.companyService.updateCompany(params.id, updateCompany);
+            return resp.status(HttpStatus.OK).json({ message: "Company updated successfully!", data: company });
+        } catch (error) {
+            return resp.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to update company!", error: error.message });
         }
     }
 }
