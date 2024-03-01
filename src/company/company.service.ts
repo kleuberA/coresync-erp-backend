@@ -110,4 +110,48 @@ export class CompanyService {
 
         return updatedCompany;
     }
+
+    async deleteCompany(companyId: string) {
+
+        const companyExist = await this.prisma.company.findUnique({
+            where: {
+                id: companyId,
+            },
+            include: {
+                users: true,
+                roles: true,
+                address: true
+            },
+        });
+
+        if (!companyExist) {
+            throw new Error("Company does not exist!");
+        }
+
+        await this.prisma.user.deleteMany({
+            where: {
+                companyId: companyId,
+            },
+        });
+
+        await this.prisma.role.deleteMany({
+            where: {
+                companyId: companyId,
+            },
+        });
+
+        if (companyExist.address && companyExist.address.id) {
+            await this.prisma.address.delete({
+                where: {
+                    id: companyExist.address.id,
+                },
+            });
+        }
+
+        return await this.prisma.company.delete({
+            where: {
+                id: companyId,
+            },
+        });
+    }
 }
