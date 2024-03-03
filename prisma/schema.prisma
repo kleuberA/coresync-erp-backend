@@ -18,12 +18,13 @@ model User {
 }
 
 model Company {
-  id      String   @id @default(uuid())
-  name    String
-  phone   String
-  address Address?
-  roles   Role[]
-  users   User[]
+  id       String    @id @default(uuid())
+  name     String
+  phone    String
+  address  Address?
+  roles    Role[]
+  users    User[]
+  projects Project[]
 }
 
 model Role {
@@ -42,4 +43,13 @@ model Address {
   zip       String
   companyId String  @unique
   company   Company @relation(fields: [companyId], references: [id])
+}
+
+model Project {
+  id         String   @id @default(uuid())
+  name       String
+  companyId  String?
+  company    Company? @relation(fields: [companyId], references: [id])
+  start_date DateTime
+  end_date   DateTime
 }

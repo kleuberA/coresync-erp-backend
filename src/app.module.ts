@@ -13,13 +13,16 @@ import { AppService } from './app.service';
 import { APP_GUARD } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { Bcrypt } from './lib/Bcrypt';
+import { ProjectService } from './project/project.service';
+import { ProjectController } from './project/project.controller';
+import { ProjectModule } from './project/project.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule],
-  controllers: [AppController, UserController, CompanyController],
+  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule],
+  controllers: [AppController, UserController, CompanyController, ProjectController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService],
+  }, CompanyService, ProjectService],
 })
 export class AppModule { }
