@@ -52,4 +52,6 @@ model Project {
   company    Company? @relation(fields: [companyId], references: [id])
   start_date DateTime
   end_date   DateTime
+  active     Boolean
+  creatorId  String
 }
