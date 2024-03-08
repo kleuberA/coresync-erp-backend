@@ -1,14 +1,43 @@
-import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProject } from './DTO/create-project-dto';
+import { Injectable } from '@nestjs/common';
+import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
+import { ProjectOutputDto } from './DTO/project-dto';
+import { Prisma } from '@prisma/client';
+import { createPaginator } from 'prisma-pagination';
+import { GetProjectFilter } from './GetProjectFilter';
 
 @Injectable()
 export class ProjectService {
     constructor(private readonly prisma: PrismaService) { }
 
+    private readonly prismaProjects = this.prisma.project;
 
-    async getProjects() {
-        return await this.prisma.project.findMany();
+    async getProjects(filters: GetProjectFilter): Promise<PaginatedOutputDto<ProjectOutputDto>> {
+
+        const where: Prisma.ProjectFindManyArgs['where'] = {};
+
+        for (const key in filters) {
+            if (key != 'page' && key != 'pageSize') {
+                where[key] = filters[key];
+            }
+        }
+
+        const paginate = createPaginator({ perPage: filters.pageSize ?? 10 });
+
+        return paginate<ProjectOutputDto, Prisma.ProjectFindManyArgs>(
+            this.prismaProjects,
+            {
+                where,
+                orderBy: {
+                    id: 'desc',
+                },
+            },
+            {
+                page: filters.page ?? 1,
+            },
+        );
+
     }
 
     async createProject(createProjectData: CreateProject) {
@@ -46,6 +75,14 @@ export class ProjectService {
             console.error(error.message);
             throw new Error(error.message);
         }
+    }
+
+    async getProjectById(projectId: string) {
+        return await this.prisma.project.findUnique({
+            where: {
+                id: projectId,
+            },
+        });
     }
 
 }
