@@ -1,12 +1,14 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
-import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
-import { ProjectService } from './project.service';
-import { Request, Response } from 'express';
-import { CreateProject } from './DTO/create-project-dto';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
-import { ProjectOutputDto } from './DTO/project-dto';
+import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
+import { CreateProject } from './DTO/create-project-dto';
 import { GetProjectFilter } from './GetProjectFilter';
+import { ProjectOutputDto } from './DTO/project-dto';
+import { ProjectService } from './project.service';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Request, Response } from 'express';
 
+@ApiTags('Project')
 @Controller('project')
 export class ProjectController {
     constructor(private readonly projectService: ProjectService) { }
@@ -16,7 +18,6 @@ export class ProjectController {
     @Get()
     async getProjects(@Res() res: Response, @Req() req: Request, @Query() filters: GetProjectFilter) {
         try {
-            console.log(filters);
             const projects = await this.projectService.getProjects(filters);
             return res.status(HttpStatus.OK).json({ message: 'Projects fetched successfully', data: projects });
         } catch (error) {
@@ -25,6 +26,7 @@ export class ProjectController {
     }
 
     @IsPublic()
+    @ApiBody({ type: CreateProject })
     @Post("create")
     async createProject(@Res() res: Response, @Body() createProjectData: CreateProject) {
         try {
