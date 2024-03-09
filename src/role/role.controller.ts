@@ -3,10 +3,24 @@ import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { CreateRole } from './DTO/create-role-dto';
 import { RoleService } from './role.service';
 import { Response } from 'express';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { UpdateRole } from './DTO/update-role-dto';
 
+@ApiTags('Role')
 @Controller('role')
 export class RoleController {
     constructor(private readonly roleService: RoleService) { }
+
+    @IsPublic()
+    @Get()
+    async getAllRoles(@Res() res: Response) {
+        try {
+            const roles = await this.roleService.getRoles();
+            return res.status(HttpStatus.OK).json({ message: "Roles fetched successfully!", data: roles });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to fetch roles!", error: error.message });
+        }
+    }
 
     @IsPublic()
     @Get("getRolesCompany/:id")
@@ -19,6 +33,7 @@ export class RoleController {
         }
     }
 
+    @ApiBody({ type: CreateRole })
     @Post("create")
     async createRole(@Res() res: Response, @Body() createRole: CreateRole) {
         try {
@@ -29,8 +44,9 @@ export class RoleController {
         }
     }
 
+    @ApiBody({ type: UpdateRole })
     @Patch("update/:id")
-    async updateRole(@Res() res: Response, @Body() updateRole: any, @Param() params) {
+    async updateRole(@Res() res: Response, @Body() updateRole: UpdateRole, @Param() params) {
         try {
             const role = await this.roleService.updateRole(params.id, updateRole);
             return res.status(HttpStatus.OK).json({ message: "Role updated successfully!", data: role });

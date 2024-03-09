@@ -21,8 +21,8 @@ async function bootstrap() {
   })
 
   const config = new DocumentBuilder()
-    .setTitle('ERP API')
-    .setDescription('The ERP API, for all your ERP needs.')
+    .setTitle('CoreSync ERP API')
+    .setDescription('The CoreSync ERP API, for all your ERP needs.')
     .setVersion('1.0')
     .addTag('erp')
     .build();

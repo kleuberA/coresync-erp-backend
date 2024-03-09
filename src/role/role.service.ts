@@ -7,6 +7,17 @@ import { UpdateRole } from './DTO/update-role-dto';
 export class RoleService {
     constructor(private readonly prisma: PrismaService) { }
 
+    async getRoles() {
+        const roles = await this.prisma.role.findMany({
+            select: {
+                id: true,
+                name: true,
+                companyId: true
+            }
+        });
+        return roles;
+    }
+
     async getRolesCompany(companyId: string) {
         return await this.prisma.role.findMany({
             where: {
