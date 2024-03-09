@@ -24,7 +24,6 @@ async function bootstrap() {
     .setTitle('CoreSync ERP API')
     .setDescription('The CoreSync ERP API, for all your ERP needs.')
     .setVersion('1.0')
-    .addTag('erp')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

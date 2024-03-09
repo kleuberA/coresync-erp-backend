@@ -11,7 +11,9 @@ import { IsPublic } from './decorators/ispublic.decorator';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { AuthRequest } from './dto/AuthRequest';
 import { AuthService } from './auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
