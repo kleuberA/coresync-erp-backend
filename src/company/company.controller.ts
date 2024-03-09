@@ -4,7 +4,9 @@ import { Response } from 'express';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { CreateCompany } from './DTO/create-company-dto';
 import { UpdateCompany } from './DTO/update-company-dto';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Company')
 @Controller('company')
 export class CompanyController {
     constructor(private readonly companyService: CompanyService) { }
@@ -19,6 +21,7 @@ export class CompanyController {
         }
     }
 
+    @ApiBody({ type: CreateCompany })
     @Post("create")
     async createCompany(@Body() createCompany: CreateCompany, @Res() resp: Response) {
         try {
@@ -39,6 +42,7 @@ export class CompanyController {
         }
     }
 
+    @ApiBody({ type: UpdateCompany })
     @Patch("update/:id")
     async updateCompany(@Param() params, @Body() updateCompany: UpdateCompany, @Res() resp: Response) {
         try {
