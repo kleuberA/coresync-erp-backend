@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
-import { CompanyService } from './company.service';
-import { Response } from 'express';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { CreateCompany } from './DTO/create-company-dto';
 import { UpdateCompany } from './DTO/update-company-dto';
+import { CompanyService } from './company.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @ApiTags('Company')
 @Controller('company')
