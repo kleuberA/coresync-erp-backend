@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { CreateProject } from './DTO/create-project-dto';
@@ -25,7 +25,6 @@ export class ProjectController {
         }
     }
 
-    @IsPublic()
     @ApiBody({ type: CreateProject })
     @Post("create")
     async createProject(@Res() res: Response, @Body() createProjectData: CreateProject) {
@@ -39,8 +38,23 @@ export class ProjectController {
 
     @IsPublic()
     @Get(":id")
-    getOneProject(@Param('id') projectId: string, @Res() res: Response) {
-        console.log(projectId);
+    async getOneProject(@Param('id') projectId: string, @Res() res: Response) {
+        try {
+            const project = await this.projectService.getProjectById(projectId);
+            return res.status(HttpStatus.OK).json({ message: 'Project fetched successfully', data: project });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while fetching project', error: error.message });
+        }
+    }
+
+    @Delete("delete/:id")
+    async deleteProject(@Param('id') projectId: string, @Res() res: Response, @Body() id: { userId: string }) {
+        try {
+            const project = await this.projectService.deleteProject(projectId, id.userId);
+            return res.status(HttpStatus.OK).json({ message: 'Project deleted successfully' });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while deleting project', error: error.message });
+        }
     }
 
 }

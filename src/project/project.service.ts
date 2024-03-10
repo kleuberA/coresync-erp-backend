@@ -1,11 +1,11 @@
+import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProject } from './DTO/create-project-dto';
-import { Injectable } from '@nestjs/common';
-import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
-import { ProjectOutputDto } from './DTO/project-dto';
-import { Prisma } from '@prisma/client';
-import { createPaginator } from 'prisma-pagination';
 import { GetProjectFilter } from './GetProjectFilter';
+import { ProjectOutputDto } from './DTO/project-dto';
+import { createPaginator } from 'prisma-pagination';
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
@@ -79,6 +79,29 @@ export class ProjectService {
 
     async getProjectById(projectId: string) {
         return await this.prisma.project.findUnique({
+            where: {
+                id: projectId,
+            },
+        });
+    }
+
+    async deleteProject(projectId: string, userId: string) {
+
+        const existProject = await this.prisma.project.findUnique({
+            where: {
+                id: projectId,
+            },
+        })
+
+        if (!existProject) {
+            throw new Error('Project does not exist');
+        }
+
+        if (existProject.creatorId !== userId) {
+            throw new Error('You are not allowed to delete this project');
+        }
+
+        return await this.prisma.project.delete({
             where: {
                 id: projectId,
             },
