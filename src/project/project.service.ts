@@ -1,6 +1,7 @@
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProject } from './DTO/create-project-dto';
+import { UpdateProject } from './DTO/update-project-dto';
 import { GetProjectFilter } from './GetProjectFilter';
 import { ProjectOutputDto } from './DTO/project-dto';
 import { createPaginator } from 'prisma-pagination';
@@ -60,11 +61,11 @@ export class ProjectService {
             ]);
 
             if (!userExist) {
-                throw new Error('User does not exist');
+                throw new Error('User does not exist.');
             }
 
             if (!existCompany) {
-                throw new Error('Company does not exist');
+                throw new Error('Company does not exist.');
             }
 
             return await this.prisma.project.create({
@@ -94,11 +95,11 @@ export class ProjectService {
         })
 
         if (!existProject) {
-            throw new Error('Project does not exist');
+            throw new Error('Project does not exist.');
         }
 
         if (existProject.creatorId !== userId) {
-            throw new Error('You are not allowed to delete this project');
+            throw new Error('You are not allowed to delete this project.');
         }
 
         return await this.prisma.project.delete({
@@ -108,4 +109,27 @@ export class ProjectService {
         });
     }
 
+    async updateProject(projectId: string, updateProject: UpdateProject) {
+        const existProject = await this.prisma.project.findUnique({
+            where: {
+                id: projectId
+            }
+        })
+
+        if (!existProject) throw new Error('Project does not exist.');
+
+        if (updateProject.userId && updateProject.userId !== existProject.creatorId) throw new Error('You are not allowed to update this project.');
+
+        const { userId, ...updatedData } = updateProject;
+
+        return await this.prisma.project.update({
+            where: {
+                id: projectId
+            },
+            data: {
+                ...updatedData
+            }
+        })
+
+    }
 }

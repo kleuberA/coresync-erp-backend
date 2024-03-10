@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { CreateProject } from './DTO/create-project-dto';
@@ -7,6 +7,7 @@ import { ProjectOutputDto } from './DTO/project-dto';
 import { ProjectService } from './project.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { UpdateProject } from './DTO/update-project-dto';
 
 @ApiTags('Project')
 @Controller('project')
@@ -19,9 +20,9 @@ export class ProjectController {
     async getProjects(@Res() res: Response, @Req() req: Request, @Query() filters: GetProjectFilter) {
         try {
             const projects = await this.projectService.getProjects(filters);
-            return res.status(HttpStatus.OK).json({ message: 'Projects fetched successfully', data: projects });
+            return res.status(HttpStatus.OK).json({ message: 'Projects fetched successfully!', data: projects });
         } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while fetching projects', error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while fetching projects.', error: error.message });
         }
     }
 
@@ -30,9 +31,9 @@ export class ProjectController {
     async createProject(@Res() res: Response, @Body() createProjectData: CreateProject) {
         try {
             const project = await this.projectService.createProject(createProjectData);
-            return res.status(HttpStatus.CREATED).json({ message: 'Project created successfully', data: project });
+            return res.status(HttpStatus.CREATED).json({ message: 'Project created successfully!', data: project });
         } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while creating project', error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while creating project.', error: error.message });
         }
     }
 
@@ -41,19 +42,31 @@ export class ProjectController {
     async getOneProject(@Param('id') projectId: string, @Res() res: Response) {
         try {
             const project = await this.projectService.getProjectById(projectId);
-            return res.status(HttpStatus.OK).json({ message: 'Project fetched successfully', data: project });
+            return res.status(HttpStatus.OK).json({ message: 'Project fetched successfully!', data: project });
         } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while fetching project', error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while fetching project.', error: error.message });
         }
     }
 
     @Delete("delete/:id")
     async deleteProject(@Param('id') projectId: string, @Res() res: Response, @Body() id: { userId: string }) {
         try {
-            const project = await this.projectService.deleteProject(projectId, id.userId);
-            return res.status(HttpStatus.OK).json({ message: 'Project deleted successfully' });
+            await this.projectService.deleteProject(projectId, id.userId);
+            return res.status(HttpStatus.OK).json({ message: 'Project deleted successfully!' });
         } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while deleting project', error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while deleting project.', error: error.message });
+        }
+    }
+
+    @IsPublic()
+    @ApiBody({ type: UpdateProject })
+    @Patch("update/:id")
+    async updateProject(@Param('id') projectId: string, @Res() res: Response, @Body() updateProjectData: UpdateProject) {
+        try {
+            const project = await this.projectService.updateProject(projectId, updateProjectData);
+            return res.status(HttpStatus.OK).json({ message: 'Project updated successfully!', data: project });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while updating project.', error: error.message });
         }
     }
 
