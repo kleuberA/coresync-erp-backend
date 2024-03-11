@@ -16,13 +16,16 @@ import { Bcrypt } from './lib/Bcrypt';
 import { ProjectService } from './project/project.service';
 import { ProjectController } from './project/project.controller';
 import { ProjectModule } from './project/project.module';
+import { TaskService } from './task/task.service';
+import { TaskController } from './task/task.controller';
+import { TaskModule } from './task/task.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule],
-  controllers: [AppController, UserController, CompanyController, ProjectController],
+  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule],
+  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService],
+  }, CompanyService, ProjectService, TaskService],
 })
 export class AppModule { }
