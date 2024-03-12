@@ -1,5 +1,5 @@
-import { IsBoolean, IsDateString, IsString } from "class-validator";
-import { Task } from "../entity/task.entity";
+import { IsBoolean, IsDateString, IsEnum, IsString } from "class-validator";
+import { Task, TaskStatus } from "../entity/task.entity";
 
 export class CreateTask extends Task {
 
@@ -24,5 +24,7 @@ export class CreateTask extends Task {
     @IsBoolean()
     active: boolean;
 
+    @IsString()
+    status: string;
 
 }

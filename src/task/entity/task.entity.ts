@@ -1,3 +1,9 @@
+export enum TaskStatus {
+    'OPEN',
+    'IN_PROGRESS',
+    'DONE',
+}
+
 export class Task {
     id: string;
     name: string;
@@ -7,4 +13,5 @@ export class Task {
     start_date: Date;
     end_date: Date;
     active: boolean;
+    status: String;
 }

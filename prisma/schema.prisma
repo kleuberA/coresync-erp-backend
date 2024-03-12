@@ -67,6 +67,7 @@ model Task {
   start_date DateTime
   end_date   DateTime
   active     Boolean
+  status     String   @default("DONE")
   assignee   User?    @relation(fields: [assigneeId], references: [id])
   project    Project? @relation(fields: [projectId], references: [id])
 }
