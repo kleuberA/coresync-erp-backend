@@ -38,10 +38,47 @@ export class TaskService {
         if (!existAssignee) throw new Error('Assignee not found.');
         if (!existCreator) throw new Error('Creator not found.');
 
+        await this.permissionUser(createTaskData.creatorId, existProject.companyId);
+
+        const newTask = await this.prisma.task.create({
+            data: {
+                ...createTaskData,
+            }
+        });
+
+        return newTask;
+
+    }
+
+    async deleteTask(taskId: string) {
+        const task = await this.prisma.task.findUnique({
+            where: {
+                id: taskId
+            }
+        });
+
+        if (!task) throw new Error('Task not found.');
+
+        const project = await this.prisma.project.findUnique({
+            where: {
+                id: task.projectId
+            }
+        })
+
+        await this.permissionUser(task.creatorId, project.companyId);
+
+        return await this.prisma.task.delete({
+            where: {
+                id: taskId
+            }
+        });
+    }
+
+    async permissionUser(userId: string, companyId: string) {
         const userPermission = await this.prisma.user.findFirst({
             where: {
-                id: createTaskData.creatorId,
-                companyId: existProject.companyId
+                id: userId,
+                companyId: companyId
             },
             select: {
                 roles: {
@@ -53,15 +90,6 @@ export class TaskService {
         });
 
         if (!userPermission) throw new Error('User not authorized to create task.');
-
-        const newTask = await this.prisma.task.create({
-            data: {
-                ...createTaskData,
-            }
-        });
-
-        return newTask;
-
     }
 
 }

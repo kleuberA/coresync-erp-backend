@@ -15,5 +15,5 @@ export class Task {
     start_date: Date;
     end_date: Date;
     active: boolean;
-    status: String;
+    status: string;
 }

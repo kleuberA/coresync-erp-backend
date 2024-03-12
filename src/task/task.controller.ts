@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { Response } from 'express';
@@ -29,6 +29,17 @@ export class TaskController {
             return resp.status(HttpStatus.CREATED).json({ message: 'Task created successfully!', data: task });
         } catch (error) {
             return resp.status(HttpStatus.BAD_REQUEST).json({ message: 'Error creating task.', error: error.message })
+        }
+    }
+
+    @IsPublic()
+    @Delete("delete/:id")
+    async deleteTask(@Res() res: Response, @Param('id') taskId: string) {
+        try {
+            await this.taskService.deleteTask(taskId);
+            return res.status(HttpStatus.OK).json({ message: 'Task deleted successfully!' });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error deleting task.', error: error.message })
         }
     }
 
