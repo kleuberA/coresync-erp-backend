@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
+import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { CreateTask } from './DTO/create-task-dto';
+import { UpdateTask } from './DTO/update-task-dto';
 import { TaskService } from './task.service';
 import { Response } from 'express';
-import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
-import { CreateTask } from './DTO/create-task-dto';
 
 @ApiTags('Task')
 @Controller('task')
@@ -22,6 +23,7 @@ export class TaskController {
     }
 
     @IsPublic()
+    @ApiBody({ type: CreateTask })
     @Post("create")
     async createTask(@Body() createTask: CreateTask, @Res() resp: Response) {
         try {
@@ -29,6 +31,18 @@ export class TaskController {
             return resp.status(HttpStatus.CREATED).json({ message: 'Task created successfully!', data: task });
         } catch (error) {
             return resp.status(HttpStatus.BAD_REQUEST).json({ message: 'Error creating task.', error: error.message })
+        }
+    }
+
+    @IsPublic()
+    @ApiBody({ type: UpdateTask })
+    @Patch("update/:id")
+    async updateTask(@Res() res: Response, @Param('id') taskId: string, @Body() updateTaskData: UpdateTask) {
+        try {
+            const updateTask = await this.taskService.updateTask(taskId, updateTaskData);
+            return res.status(HttpStatus.OK).json({ message: 'Task updated successfully!', data: updateTask });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error updating task.', error: error.message })
         }
     }
 

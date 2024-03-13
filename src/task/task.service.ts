@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTask } from './DTO/create-task-dto';
-import { TaskStatus } from './entity/task.entity';
+import { Injectable } from '@nestjs/common';
+import { UpdateTask } from './DTO/update-task-dto';
+import { Task } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
@@ -72,6 +73,39 @@ export class TaskService {
                 id: taskId
             }
         });
+    }
+
+    async updateTask(taskId: string, updateTaskData: UpdateTask) {
+        const task = await this.getExistTask(taskId);
+
+        const project = await this.prisma.project.findUnique({
+            where: {
+                id: task.projectId
+            }
+        })
+
+        await this.permissionUser(task.creatorId, project.companyId);
+
+        return await this.prisma.task.update({
+            where: {
+                id: taskId
+            },
+            data: {
+                ...updateTaskData
+            }
+        });
+    }
+
+    async getExistTask(taskId: string): Promise<Task> {
+        const task = await this.prisma.task.findUnique({
+            where: {
+                id: taskId
+            }
+        });
+
+        if (!task) throw new Error('Task not found.');
+
+        return task;
     }
 
     async permissionUser(userId: string, companyId: string) {
