@@ -18,6 +18,18 @@ export class TaskService {
         return task;
     }
 
+    async findTaskByProject(projectId: string): Promise<Task[]> {
+        const tasks = await this.prisma.task.findMany({
+            where: {
+                projectId: projectId
+            }
+        });
+
+        if (tasks.length === 0) throw new Error('Tasks not found.');
+
+        return tasks;
+    }
+
     async createTask(createTaskData: CreateTask): Promise<CreateTask> {
 
         const existProjectPromise = this.prisma.project.findUnique({

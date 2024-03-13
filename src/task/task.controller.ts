@@ -33,6 +33,17 @@ export class TaskController {
         }
     }
 
+    @IsPublic()
+    @Get("findbyproject/:id")
+    async findTaskByProject(@Param("id") projectId: string, @Res() res: Response) {
+        try {
+            const tasks = await this.taskService.findTaskByProject(projectId);
+            return res.status(HttpStatus.OK).json({ message: 'Get tasks successfully!', data: tasks });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error getting tasks.', error: error.message })
+        }
+    }
+
     @ApiBody({ type: CreateTask })
     @Post("create")
     async createTask(@Body() createTask: CreateTask, @Res() resp: Response) {
