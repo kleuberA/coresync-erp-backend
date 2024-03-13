@@ -23,6 +23,16 @@ export class TaskController {
     }
 
     @IsPublic()
+    @Get("find/:id")
+    async findOne(@Param("id") taskId: string, @Res() res: Response) {
+        try {
+            const task = await this.taskService.findTaskById(taskId);
+            return res.status(HttpStatus.OK).json({ message: 'Get task successfully!', data: task });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error getting task.', error: error.message })
+        }
+    }
+
     @ApiBody({ type: CreateTask })
     @Post("create")
     async createTask(@Body() createTask: CreateTask, @Res() resp: Response) {
@@ -34,7 +44,6 @@ export class TaskController {
         }
     }
 
-    @IsPublic()
     @ApiBody({ type: UpdateTask })
     @Patch("update/:id")
     async updateTask(@Res() res: Response, @Param('id') taskId: string, @Body() updateTaskData: UpdateTask) {
@@ -46,7 +55,6 @@ export class TaskController {
         }
     }
 
-    @IsPublic()
     @Delete("delete/:id")
     async deleteTask(@Res() res: Response, @Param('id') taskId: string) {
         try {

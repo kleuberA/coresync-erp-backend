@@ -13,6 +13,11 @@ export class TaskService {
         return allTasks;
     }
 
+    async findTaskById(taskId: string) {
+        const task = await this.getTask(taskId);
+        return task;
+    }
+
     async createTask(createTaskData: CreateTask): Promise<CreateTask> {
 
         const existProjectPromise = this.prisma.project.findUnique({
@@ -76,7 +81,7 @@ export class TaskService {
     }
 
     async updateTask(taskId: string, updateTaskData: UpdateTask) {
-        const task = await this.getExistTask(taskId);
+        const task = await this.getTask(taskId);
 
         const project = await this.prisma.project.findUnique({
             where: {
@@ -96,7 +101,7 @@ export class TaskService {
         });
     }
 
-    async getExistTask(taskId: string): Promise<Task> {
+    async getTask(taskId: string): Promise<Task> {
         const task = await this.prisma.task.findUnique({
             where: {
                 id: taskId
