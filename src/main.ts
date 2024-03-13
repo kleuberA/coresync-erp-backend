@@ -29,7 +29,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   const theme = new SwaggerTheme();
-  const optionsV1 = theme.getDefaultConfig('dark' as SwaggerThemeName); // Fix: Cast the argument to SwaggerThemeName
+  const optionsV1 = theme.getDefaultConfig('dark' as SwaggerThemeName);
   SwaggerModule.setup('api', app, document, optionsV1);
 
   await app.listen(3000);
