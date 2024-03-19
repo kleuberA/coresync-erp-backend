@@ -19,13 +19,16 @@ import { ProjectModule } from './project/project.module';
 import { TaskService } from './task/task.service';
 import { TaskController } from './task/task.controller';
 import { TaskModule } from './task/task.module';
+import { MeetingService } from './meeting/meeting.service';
+import { MeetingController } from './meeting/meeting.controller';
+import { MeetingModule } from './meeting/meeting.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule],
-  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController],
+  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule],
+  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService, TaskService],
+  }, CompanyService, ProjectService, TaskService, MeetingService],
 })
 export class AppModule { }
