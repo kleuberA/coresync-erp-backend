@@ -94,7 +94,8 @@ export class MeetingService {
             }
         });
 
-        if (!userExist) throw new Error('User not found.');
+        // if (!userExist) throw new Error('User not found.');
+        if (userExist.length !== participantData.userId.length) throw new Error('One or more users not found.');
 
         const participantExist = await this.prisma.meeting.findFirst({
             where: {
@@ -109,7 +110,8 @@ export class MeetingService {
             }
         });
 
-        if (participantExist) throw new Error('Participant already exist.');
+        // if (participantExist) throw new Error('Participant already exist.');
+        if (participantExist) throw new Error('One or more participants already exist in the meeting.');
 
         const participant = await this.prisma.meeting.update({
             where: {
