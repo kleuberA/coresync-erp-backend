@@ -1,8 +1,9 @@
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { MeetingService } from './meeting.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { CreateMeeting } from './DTO/create-meeting-dto';
 
 @ApiTags('Meeting')
 @Controller('meeting')
@@ -42,4 +43,23 @@ export class MeetingController {
         }
     }
 
+    @Post("create")
+    async createMeeting(@Res() res: Response, @Body() createMeeting: CreateMeeting) {
+        try {
+            const meetings = await this.meetingService.createMeeting(createMeeting);
+            return res.status(HttpStatus.OK).json({ message: 'Meetings created successfully!', data: meetings })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while creating meeting.', error: error.message })
+        }
+    }
+
+    @Patch("update/addparticipant/:id")
+    async addParticipantMeeting(@Res() res: Response, @Param('id') id: string, @Body() meetingData) {
+        try {
+            const meetings = await this.meetingService.addParticipantMeeting(id, meetingData);
+            return res.status(HttpStatus.OK).json({ message: 'Participant added successfully!', data: meetings })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while adding participant.', error: error.message })
+        }
+    }
 }

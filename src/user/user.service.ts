@@ -26,7 +26,7 @@ export class UserService {
 
         const userExist = await this.prisma.user.findUnique({
             where: {
-                email: createUser.email
+                email: createUser.email.toLowerCase()
             }
         });
 
@@ -39,7 +39,7 @@ export class UserService {
         const user = await this.prisma.user.create({
             data: {
                 name: createUser.name,
-                email: createUser.email,
+                email: createUser.email.toLowerCase(),
                 password: newPassword,
                 roles: { create: [{ name: 'user' }] },
             },
@@ -69,7 +69,7 @@ export class UserService {
             },
             data: {
                 name: updateUser.name,
-                email: updateUser.email,
+                email: updateUser.email.toLowerCase(),
                 password: updateUser.password
             }
         })
