@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
+import { UpdateMeeting } from './DTO/update-meeting-dto';
+import { CreateMeeting } from './DTO/create-meeting-dto';
 import { MeetingService } from './meeting.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { CreateMeeting } from './DTO/create-meeting-dto';
 
 @ApiTags('Meeting')
 @Controller('meeting')
@@ -60,6 +61,26 @@ export class MeetingController {
             return res.status(HttpStatus.OK).json({ message: 'Participant added successfully!', data: meetings })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while adding participant.', error: error.message })
+        }
+    }
+
+    @Patch("update/removeparticipant/:id")
+    async removeParticipantFromMeeting(@Res() res: Response, @Param('id') id: string, @Body() meetingData) {
+        try {
+            const meetings = await this.meetingService.removeParticipantFromMeeting(id, meetingData)
+            return res.status(HttpStatus.OK).json({ message: 'Participant removed successfully!', data: meetings })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while removing participant.', error: error.message })
+        }
+    }
+
+    @Patch("update/:id")
+    async updateMeeting(@Res() res: Response, @Param('id') id: string, @Body() meetingData: UpdateMeeting) {
+        try {
+            const meetings = await this.meetingService.updateMeeting(id, meetingData);
+            return res.status(HttpStatus.OK).json({ message: 'Meeting updated successfully!', data: meetings })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while updating meeting.', error: error.message })
         }
     }
 

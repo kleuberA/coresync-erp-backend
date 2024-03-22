@@ -1,8 +1,10 @@
+import { AddParticipantMeeting } from './DTO/add-participant-meeting-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMeeting } from './DTO/create-meeting-dto';
+import { UpdateMeeting } from './DTO/update-meeting-dto';
 import { Injectable } from '@nestjs/common';
 import { Meeting } from '@prisma/client';
-import { AddParticipantMeeting } from './DTO/add-participant-meeting-dto';
+import { RemoveParticipantMeeting } from './DTO/remove-participant-meeting-dto';
 
 @Injectable()
 export class MeetingService {
@@ -129,7 +131,81 @@ export class MeetingService {
         return participant;
     }
 
-    async updateMeeting() { }
+    async removeParticipantFromMeeting(meetingId: string, participantData: RemoveParticipantMeeting): Promise<Meeting> {
+        const meetingExist = await this.prisma.meeting.findUnique({
+            where: {
+                id: meetingId
+            }
+        });
+
+        if (!meetingExist) throw new Error('Meeting not found.');
+
+        const userExist = await this.prisma.user.findMany({
+            where: {
+                id: {
+                    in: participantData.userId
+                }
+            }
+        });
+
+        // if (!userExist) throw new Error('User not found.');
+        if (userExist.length !== participantData.userId.length) throw new Error('One or more users not found.');
+        if (meetingExist.creatorId !== participantData.creatorMeetingId) throw new Error('You are not the creator of this meeting.');
+
+        const participantExist = await this.prisma.meeting.findFirst({
+            where: {
+                id: meetingId,
+                users: {
+                    some: {
+                        id: {
+                            in: participantData.userId
+                        }
+                    }
+                }
+            }
+        });
+
+        // if (!participantExist) throw new Error('Participant not exist.');
+        if (!participantExist) throw new Error('One or more participants not exist in the meeting.');
+
+        const participant = await this.prisma.meeting.update({
+            where: {
+                id: meetingId
+            },
+            data: {
+                users: {
+                    disconnect: participantData.users.map(user => {
+                        return { id: user.id }
+                    })
+                }
+            }
+        });
+
+        return participant;
+    }
+
+    async updateMeeting(meetingId: string, updateMeetingData: UpdateMeeting) {
+        const meetingExist = await this.prisma.meeting.findUnique({
+            where: {
+                id: meetingId
+            }
+        });
+
+        if (!meetingExist) throw new Error('Meeting not found.');
+
+        if (meetingExist.creatorId !== updateMeetingData.userId) throw new Error('You are not the creator of this meeting.');
+
+        const meeting = await this.prisma.meeting.update({
+            where: {
+                id: meetingId
+            },
+            data: {
+                ...updateMeetingData
+            }
+        });
+
+        return meeting;
+    }
 
     async deleteMeeting(meetingId: string, userId: string): Promise<Meeting> {
 
