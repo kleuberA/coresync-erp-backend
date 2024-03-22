@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { MeetingService } from './meeting.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -62,4 +62,15 @@ export class MeetingController {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while adding participant.', error: error.message })
         }
     }
+
+    @Delete("delete/:id/:userId")
+    async deleteMeeting(@Res() res: Response, @Param('id') id: string, @Param('userId') userId: string) {
+        try {
+            const meetings = await this.meetingService.deleteMeeting(id, userId);
+            return res.status(HttpStatus.OK).json({ message: 'Meeting deleted successfully!' })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while deleting meeting.', error: error.message })
+        }
+    }
+
 }

@@ -128,4 +128,36 @@ export class MeetingService {
 
         return participant;
     }
+
+    async updateMeeting() { }
+
+    async deleteMeeting(meetingId: string, userId: string): Promise<Meeting> {
+
+        const userExist = await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        });
+
+        if (!userExist) throw new Error('User not found.');
+
+        const meetingExist = await this.prisma.meeting.findUnique({
+            where: {
+                id: meetingId
+            }
+        });
+
+        if (!meetingExist) throw new Error('Meeting not found.');
+
+        if (meetingExist.creatorId !== userId) throw new Error('You are not the creator of this meeting.');
+
+        const meeting = await this.prisma.meeting.delete({
+            where: {
+                id: meetingId
+            }
+        });
+
+        return meeting;
+    }
+
 }
