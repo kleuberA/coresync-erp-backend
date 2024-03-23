@@ -22,6 +22,7 @@ import { TaskModule } from './task/task.module';
 import { MeetingService } from './meeting/meeting.service';
 import { MeetingController } from './meeting/meeting.controller';
 import { MeetingModule } from './meeting/meeting.module';
+import { NotificationsGateway } from './notifications/notifications.gateway';
 
 @Module({
   imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule],
@@ -29,6 +30,6 @@ import { MeetingModule } from './meeting/meeting.module';
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService, TaskService, MeetingService],
+  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway],
 })
 export class AppModule { }
