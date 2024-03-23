@@ -1,14 +1,15 @@
+import { RemoveParticipantMeeting } from './DTO/remove-participant-meeting-dto';
+import { NotificationsGateway } from 'src/notifications/notifications.gateway';
 import { AddParticipantMeeting } from './DTO/add-participant-meeting-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMeeting } from './DTO/create-meeting-dto';
 import { UpdateMeeting } from './DTO/update-meeting-dto';
 import { Injectable } from '@nestjs/common';
 import { Meeting } from '@prisma/client';
-import { RemoveParticipantMeeting } from './DTO/remove-participant-meeting-dto';
 
 @Injectable()
 export class MeetingService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService, private readonly notificationGateway: NotificationsGateway) { }
 
     async getAllMeetings(): Promise<Meeting[]> {
         const meetings = await this.prisma.meeting.findMany();
@@ -74,6 +75,15 @@ export class MeetingService {
                     })
                 }
             }
+        });
+
+        meetingData.users.forEach(user => {
+            this.notificationGateway.sendNotification(
+                {
+                    userId: user.id,
+                    message: `You have been invited to the meeting ${meetingData.name}.`
+                }
+            );
         });
 
         return meeting;
