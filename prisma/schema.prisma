@@ -15,18 +15,19 @@ model User {
   companyId String?
   tasks     Task[]
   company   Company?  @relation(fields: [companyId], references: [id])
-  roles     Role[]    @relation("UserRoles")
   meetings  Meeting[] @relation("MeetingUsers")
+  roles     Role[]    @relation("UserRoles")
 }
 
 model Company {
-  id       String    @id @default(uuid())
-  name     String
-  phone    String
-  address  Address?
-  projects Project[]
-  roles    Role[]
-  users    User[]
+  id        String     @id @default(uuid())
+  name      String
+  phone     String
+  address   Address?
+  customers Customer[]
+  projects  Project[]
+  roles     Role[]
+  users     User[]
 }
 
 model Role {
@@ -55,9 +56,9 @@ model Project {
   end_date   DateTime
   active     Boolean
   creatorId  String
+  meetings   Meeting[]
   company    Company?  @relation(fields: [companyId], references: [id])
   tasks      Task[]
-  meetings   Meeting[]
 }
 
 model Task {
@@ -70,8 +71,8 @@ model Task {
   end_date   DateTime
   active     Boolean
   status     String   @default("OPEN")
-  assignee   User?    @relation(fields: [assigneeId], references: [id])
   project    Project? @relation(fields: [projectId], references: [id])
+  assignee   User?    @relation(fields: [assigneeId], references: [id])
 }
 
 model Meeting {
@@ -82,4 +83,28 @@ model Meeting {
   start_date DateTime
   project    Project? @relation(fields: [projectId], references: [id])
   users      User[]   @relation("MeetingUsers")
+}
+
+model Customer {
+  id                 String   @id @default(uuid())
+  name               String
+  phone              String
+  email              String
+  type               String
+  fiscalCode         String
+  registrationDate   DateTime
+  creditLimit        Float
+  paymentTerms       String
+  purchaseHistory    String
+  contactInformation String
+  classification     String
+  status             Boolean
+  references         String
+  geographicLocation String
+  preferences        String
+  supportHistory     String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  companyId          String
+  company            Company  @relation(fields: [companyId], references: [id])
 }
