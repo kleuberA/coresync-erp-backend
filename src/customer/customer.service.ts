@@ -11,4 +11,11 @@ export class CustomerService {
         return customers;
     }
 
+    async getCustomerById(id: string): Promise<Customer> {
+        const customer = await this.prisma.customer.findUnique({
+            where: { id }
+        });
+        return customer;
+    }
+
 }
