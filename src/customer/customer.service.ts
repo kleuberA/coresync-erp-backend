@@ -53,6 +53,26 @@ export class CustomerService {
         return customer;
     }
 
+    async deleteCustomer(costumerId: string, userId: string, companyId: string): Promise<Customer> {
+
+        const existCustomer = await this.prisma.customer.findUnique({
+            where: {
+                id: costumerId
+            }
+        });
+
+        if (!existCustomer) throw new Error("Customer not found!");
+
+        await this.permissionUser(userId, companyId);
+
+        const customer = await this.prisma.customer.delete({
+            where: {
+                id: costumerId
+            }
+        });
+        return customer;
+    }
+
     async permissionUser(userId: string, companyId: string) {
         const userPermission = await this.prisma.user.findFirst({
             where: {
