@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { UpdateCustomerDTO } from './DTO/update-customer-dto';
+import { CreateCustomerDto } from './DTO/create-customer-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Customer } from './entity/customer.entity';
-import { CreateCustomerDto } from './DTO/create-customer-dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CustomerService {
@@ -48,6 +49,47 @@ export class CustomerService {
         const customer = await this.prisma.customer.create({
             data: {
                 ...createCustomerData
+            }
+        });
+        return customer;
+    }
+
+    async updateCustomer(costumerId: string, updateCustomerData: UpdateCustomerDTO): Promise<Customer> {
+        const customer = await this.getCustomerById(costumerId);
+
+        if (!customer) throw new Error("Customer not found!");
+
+        await this.permissionUser(updateCustomerData.userId, customer.companyId);
+
+        const { userId, ...updateCustomerDataFormat } = updateCustomerData;
+
+        const updateCustomer = await this.prisma.customer.update({
+            where: {
+                id: costumerId
+            },
+            data: {
+                ...updateCustomerDataFormat
+            }
+        });
+
+        return updateCustomer;
+    }
+
+    async deleteCustomer(costumerId: string, userId: string, companyId: string): Promise<Customer> {
+
+        const existCustomer = await this.prisma.customer.findUnique({
+            where: {
+                id: costumerId
+            }
+        });
+
+        if (!existCustomer) throw new Error("Customer not found!");
+
+        await this.permissionUser(userId, companyId);
+
+        const customer = await this.prisma.customer.delete({
+            where: {
+                id: costumerId
             }
         });
         return customer;
