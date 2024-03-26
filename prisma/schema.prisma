@@ -25,6 +25,7 @@ model Company {
   phone     String
   address   Address?
   customers Customer[]
+  suppliers Supplier[]
   projects  Project[]
   roles     Role[]
   users     User[]
@@ -107,4 +108,31 @@ model Customer {
   updatedAt          DateTime @updatedAt
   companyId          String
   company            Company  @relation(fields: [companyId], references: [id])
+}
+
+model Supplier {
+  id                           String   @id @default(uuid())
+  companyName                  String
+  contactPerson                String
+  contactTitle                 String
+  contactEmail                 String
+  contactPhone                 String
+  address                      String
+  country                      String
+  paymentTerms                 String
+  leadTime                     String
+  minimumOrderQuantity         String
+  preferredCommunicationMethod String
+  supplierRating               String
+  supplierCategory             String
+  certifications               String
+  contractExpiryDate           DateTime
+  bankingInformation           String
+  taxIdentificationNumber      String
+  discounts                    String
+  notesOrComments              String
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  companyId                    String
+  company                      Company  @relation(fields: [companyId], references: [id])
 }
