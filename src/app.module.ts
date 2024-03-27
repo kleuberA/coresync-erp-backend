@@ -26,13 +26,16 @@ import { NotificationsGateway } from './notifications/notifications.gateway';
 import { CustomerController } from './customer/customer.controller';
 import { CustomerService } from './customer/customer.service';
 import { CustomerModule } from './customer/customer.module';
+import { SupplierController } from './supplier/supplier.controller';
+import { SupplierService } from './supplier/supplier.service';
+import { SupplierModule } from './supplier/supplier.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule],
-  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController],
+  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule],
+  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService],
+  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService],
 })
 export class AppModule { }
