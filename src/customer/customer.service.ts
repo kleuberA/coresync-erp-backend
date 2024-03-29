@@ -30,7 +30,7 @@ export class CustomerService {
 
         if (!existCompany) throw new Error("Company not found!");
 
-        await this.permissionUser(createCustomer.userId, createCustomer.companyId);
+        await this.permissionUser(createCustomer.userId, createCustomer.companyId, 'create');
 
         let validate: boolean;
 
@@ -59,7 +59,7 @@ export class CustomerService {
 
         if (!customer) throw new Error("Customer not found!");
 
-        await this.permissionUser(updateCustomerData.userId, customer.companyId);
+        await this.permissionUser(updateCustomerData.userId, customer.companyId, 'update');
 
         const { userId, ...updateCustomerDataFormat } = updateCustomerData;
 
@@ -85,7 +85,7 @@ export class CustomerService {
 
         if (!existCustomer) throw new Error("Customer not found!");
 
-        await this.permissionUser(userId, companyId);
+        await this.permissionUser(userId, companyId, 'delete');
 
         const customer = await this.prisma.customer.delete({
             where: {
@@ -95,7 +95,7 @@ export class CustomerService {
         return customer;
     }
 
-    async permissionUser(userId: string, companyId: string) {
+    async permissionUser(userId: string, companyId: string, method: string) {
         const userPermission = await this.prisma.user.findFirst({
             where: {
                 id: userId,
@@ -110,7 +110,7 @@ export class CustomerService {
             }
         });
 
-        if (!userPermission) throw new Error('User not authorized to create task.');
+        if (!userPermission) throw new Error(`User not authorized to ${method} task.`);
     }
 
     validateCNPJ(cnpj: string): boolean {
