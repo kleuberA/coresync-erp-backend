@@ -1,7 +1,7 @@
-import { Controller, Delete, Get, HttpStatus, Param, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
 import { GetSuppliersFilter } from './interfaces/GetSuppliersFilter';
-import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
+import { CreateSupplier } from './DTO/create-supplier-dto';
 import { SupplierOutputDTO } from './DTO/supplier-dto';
 import { SupplierService } from './supplier.service';
 import { Response, Request } from 'express';
@@ -12,7 +12,6 @@ import { ApiTags } from '@nestjs/swagger';
 export class SupplierController {
     constructor(private readonly supplierService: SupplierService) { }
 
-    @IsPublic()
     @ApiPaginatedResponse(SupplierOutputDTO)
     @Get()
     async getSuppliers(@Res() res: Response, @Req() req: Request, @Query() filters: GetSuppliersFilter) {
@@ -24,7 +23,6 @@ export class SupplierController {
         }
     }
 
-    @IsPublic()
     @Get('/:id')
     async getSupplierById(@Res() res: Response, @Param("id") id: string) {
         try {
@@ -35,7 +33,16 @@ export class SupplierController {
         }
     }
 
-    @IsPublic()
+    @Post("/create")
+    async createSupplier(@Res() res: Response, @Req() req: Request, @Body() createSupplierData: CreateSupplier) {
+        try {
+            const supplier = await this.supplierService.createSupplier(createSupplierData);
+            return res.status(HttpStatus.OK).json({ message: 'Supplier created successfully!', data: supplier });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while creating supplier.', error: error.message });
+        }
+    }
+
     @Delete("/delete/:id")
     async deleteSupplier(@Res() res: Response, @Param("id") id: string, @Param("userId") userId: string) {
         try {

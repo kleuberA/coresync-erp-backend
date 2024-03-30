@@ -6,6 +6,7 @@ import { createPaginator } from 'prisma-pagination';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Supplier } from './entity/supplier.entity';
+import { CreateSupplier } from './DTO/create-supplier-dto';
 
 @Injectable()
 export class SupplierService {
@@ -43,6 +44,30 @@ export class SupplierService {
         const supplierExist = await this.supplierExist(supplierId);
 
         return supplierExist;
+    }
+
+    async createSupplier(data: CreateSupplier): Promise<Supplier> {
+
+        const companyExist = await this.prisma.company.findUnique({
+            where: {
+                id: data.companyId,
+            },
+        });
+
+        if (!companyExist) throw new Error('Company not found.');
+
+        await this.permissionUser(data.userId, data.companyId, 'create');
+
+        const { userId, ...createSupplierData } = data;
+
+        const supplier = await this.prismaSuppliers.create({
+            data: {
+                ...createSupplierData
+            },
+        });
+
+        return supplier;
+
     }
 
     async deleteSupplier(supplierId: string, userId: string): Promise<Supplier> {
