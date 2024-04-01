@@ -1,12 +1,13 @@
 import { GetSuppliersFilter } from './interfaces/GetSuppliersFilter';
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
+import { UpdateSupplier } from './DTO/update-supplier-dto';
+import { CreateSupplier } from './DTO/create-supplier-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SupplierOutputDTO } from './DTO/supplier-dto';
+import { Supplier } from './entity/supplier.entity';
 import { createPaginator } from 'prisma-pagination';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { Supplier } from './entity/supplier.entity';
-import { CreateSupplier } from './DTO/create-supplier-dto';
 
 @Injectable()
 export class SupplierService {
@@ -67,6 +68,25 @@ export class SupplierService {
         });
 
         return supplier;
+
+    }
+
+    async updateSupplier(supplierId: string, data: UpdateSupplier): Promise<Supplier> {
+
+        const supplier = await this.supplierExist(supplierId);
+
+        await this.permissionUser(data.userId, supplier.companyId, 'update');
+
+        const { userId, ...updateSupplierData } = data;
+
+        return await this.prismaSuppliers.update({
+            where: {
+                id: supplierId,
+            },
+            data: {
+                ...updateSupplierData
+            },
+        });
 
     }
 
