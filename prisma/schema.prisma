@@ -111,7 +111,7 @@ model Customer {
 }
 
 model Supplier {
-  id                           String   @id @default(uuid())
+  id                           String    @id @default(uuid())
   companyName                  String
   contactPerson                String
   contactTitle                 String
@@ -131,8 +131,56 @@ model Supplier {
   taxIdentificationNumber      String
   discounts                    String
   notesOrComments              String
-  createdAt                    DateTime @default(now())
-  updatedAt                    DateTime @updatedAt
+  createdAt                    DateTime  @default(now())
+  updatedAt                    DateTime  @updatedAt
   companyId                    String
-  company                      Company  @relation(fields: [companyId], references: [id])
+  company                      Company   @relation(fields: [companyId], references: [id])
+  products                     Product[]
+}
+
+model Product {
+  id                   String            @id @default(uuid())
+  name                 String
+  detailedDescription  String
+  unitOfMeasure        String
+  weight               String
+  dimensions           String
+  stock                String
+  manufactureDate      DateTime
+  expirationDate       DateTime
+  purchase             String
+  selling              String
+  profit               String
+  minimumOrderQuantity String
+  minimumStockQuantity String
+  maximumStockQuantity String
+  replenishment        String
+  categories           Categories[]
+  salesHistory         SalesHistory[]
+  commentsOrNotes      CommentsOrNotes[]
+  supplierId           String
+  supplier             Supplier          @relation(fields: [supplierId], references: [id])
+}
+
+model Categories {
+  id      String    @id @default(uuid())
+  name    String
+  product Product[]
+}
+
+model SalesHistory {
+  id        String   @id @default(uuid())
+  date      DateTime
+  quantity  String
+  price     String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model CommentsOrNotes {
+  id        String   @id @default(uuid())
+  date      DateTime
+  comment   String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
 }
