@@ -5,6 +5,7 @@ import { GetProductFilter } from './GetProductFilter';
 import { createPaginator } from 'prisma-pagination';
 import { ProductOutputDTO } from './DTO/product-dto';
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
+import { CreateProduct } from './DTO/create-product-dto';
 
 @Injectable()
 export class ProductService {
@@ -46,6 +47,46 @@ export class ProductService {
         if (!product) throw new Error('Product not found.');
 
         return product;
+    }
+
+    async createProduct(productData: CreateProduct): Promise<Product> {
+
+        const supplierExist = await this.prisma.supplier.findUnique({
+            where: { id: productData.supplierId }
+        });
+
+        if (!supplierExist) throw new Error('Supplier not found.');
+
+        await this.permissionUser(productData.userId, supplierExist.companyId, 'create');
+
+        const { userId, ...newProductData } = productData;
+
+        const product = await this.prisma.product.create({
+            data: {
+                ...newProductData
+            }
+        });
+
+        return product;
+
+    }
+
+    async permissionUser(userId: string, companyId: string, method: string) {
+        const userPermission = await this.prisma.user.findFirst({
+            where: {
+                id: userId,
+                companyId: companyId
+            },
+            select: {
+                roles: {
+                    where: {
+                        name: 'admin_company',
+                    }
+                }
+            }
+        });
+
+        if (!userPermission) throw new Error(`User not authorized to ${method} product.`);
     }
 
 }

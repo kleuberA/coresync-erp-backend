@@ -17,7 +17,7 @@ export class SupplierService {
 
     async getSuppliers(filters: GetSuppliersFilter): Promise<PaginatedOutputDto<SupplierOutputDTO>> {
 
-        const where: Prisma.ProjectFindManyArgs['where'] = {};
+        const where: Prisma.SupplierFindManyArgs['where'] = {};
 
         for (const key in filters) {
             if (key != 'page' && key != 'pageSize') {
@@ -26,10 +26,13 @@ export class SupplierService {
         }
         const paginate = createPaginator({ perPage: filters.pageSize ?? 10 });
 
-        return paginate<SupplierOutputDTO, Prisma.ProjectFindManyArgs>(
+        return paginate<SupplierOutputDTO, Prisma.SupplierFindManyArgs>(
             this.prismaSuppliers,
             {
                 where,
+                include: {
+                    products: true
+                },
                 orderBy: {
                     id: 'desc',
                 },
