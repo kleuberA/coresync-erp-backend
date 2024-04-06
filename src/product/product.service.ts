@@ -28,6 +28,11 @@ export class ProductService {
             this.prismProducts,
             {
                 where,
+                include: {
+                    categories: true,
+                    salesHistory: true,
+                    commentsOrNotes: true,
+                },
                 orderBy: {
                     id: 'desc',
                 },
@@ -69,6 +74,24 @@ export class ProductService {
 
         return product;
 
+    }
+
+    async deleteProduct(productId: string, userId: string) {
+        const product = await this.prisma.product.findUnique({
+            where: { id: productId }
+        });
+
+        if (!product) throw new Error('Product not found.');
+
+        const supplier = await this.prisma.supplier.findUnique({
+            where: { id: product.supplierId }
+        });
+
+        await this.permissionUser(userId, supplier.companyId, 'delete');
+
+        return await this.prisma.product.delete({
+            where: { id: productId }
+        });
     }
 
     async permissionUser(userId: string, companyId: string, method: string) {
