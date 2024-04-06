@@ -1,5 +1,5 @@
 import { ProductService } from './product.service';
-import { Body, Controller, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
@@ -43,6 +43,16 @@ export class ProductController {
             return res.status(HttpStatus.OK).json({ message: 'Product created successfully!', data: product })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to create product!', error: error.message })
+        }
+    }
+
+    @Delete('/delete/:id/:userId')
+    async deleteProduct(@Param('id') id: string, @Param('userId') userId: string, @Res() res: Response) {
+        try {
+            const product = await this.productService.deleteProduct(id, userId);
+            return res.status(HttpStatus.OK).json({ message: 'Product deleted successfully!', data: product })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to delete product!', error: error.message })
         }
     }
 
