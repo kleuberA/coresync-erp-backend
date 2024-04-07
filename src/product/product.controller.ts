@@ -1,5 +1,5 @@
 import { ProductService } from './product.service';
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
@@ -7,6 +7,7 @@ import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse
 import { ProjectOutputDto } from 'src/project/DTO/project-dto';
 import { GetProductFilter } from './GetProductFilter';
 import { CreateProduct } from './DTO/create-product-dto';
+import { UpdateProductDTO } from './DTO/update-product-dto';
 
 @ApiTags('Product')
 @Controller('product')
@@ -43,6 +44,16 @@ export class ProductController {
             return res.status(HttpStatus.OK).json({ message: 'Product created successfully!', data: product })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to create product!', error: error.message })
+        }
+    }
+
+    @Patch('/update/:id')
+    async updateProduct(@Param('id') id: string, @Body() productData: UpdateProductDTO, @Res() res: Response) {
+        try {
+            const product = await this.productService.updateProduct(id, productData);
+            return res.status(HttpStatus.OK).json({ message: 'Product updated successfully!', data: product })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to update product!', error: error.message })
         }
     }
 

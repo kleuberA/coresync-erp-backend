@@ -6,6 +6,7 @@ import { createPaginator } from 'prisma-pagination';
 import { ProductOutputDTO } from './DTO/product-dto';
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
 import { CreateProduct } from './DTO/create-product-dto';
+import { UpdateProductDTO } from './DTO/update-product-dto';
 
 @Injectable()
 export class ProductService {
@@ -74,6 +75,29 @@ export class ProductService {
 
         return product;
 
+    }
+
+    async updateProduct(productId: string, updateProductData: UpdateProductDTO) {
+        const product = await this.prisma.product.findUnique({
+            where: { id: productId }
+        });
+
+        if (!product) throw new Error('Product not found.');
+
+        const supplier = await this.prisma.supplier.findUnique({
+            where: { id: product.supplierId }
+        });
+
+        await this.permissionUser(updateProductData.userId, supplier.companyId, 'update');
+
+        const { userId, ...newProductData } = updateProductData;
+
+        return await this.prisma.product.update({
+            where: { id: productId },
+            data: {
+                ...newProductData
+            }
+        });
     }
 
     async deleteProduct(productId: string, userId: string) {
