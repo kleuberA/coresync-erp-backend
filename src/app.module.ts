@@ -31,13 +31,16 @@ import { SupplierService } from './supplier/supplier.service';
 import { SupplierModule } from './supplier/supplier.module';
 import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
+import { SalesorderService } from './salesorder/salesorder.service';
+import { SalesorderController } from './salesorder/salesorder.controller';
+import { SalesorderModule } from './salesorder/salesorder.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule, ProductModule],
-  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController],
+  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule, ProductModule, SalesorderModule],
+  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController, SalesorderController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService],
+  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService, SalesorderService],
 })
 export class AppModule { }
