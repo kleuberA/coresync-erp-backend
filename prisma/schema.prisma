@@ -20,15 +20,16 @@ model User {
 }
 
 model Company {
-  id        String     @id @default(uuid())
-  name      String
-  phone     String
-  address   Address?
-  customers Customer[]
-  suppliers Supplier[]
-  projects  Project[]
-  roles     Role[]
-  users     User[]
+  id         String       @id @default(uuid())
+  name       String
+  phone      String
+  address    Address?
+  customers  Customer[]
+  suppliers  Supplier[]
+  projects   Project[]
+  roles      Role[]
+  users      User[]
+  salesOrder SalesOrder[]
 }
 
 model Role {
@@ -190,6 +191,8 @@ model SalesOrder {
   id                   String   @id @default(uuid())
   customerID           String
   customer             Customer @relation(fields: [customerID], references: [id])
+  companyID            String
+  company              Company  @relation(fields: [companyID], references: [id])
   orderDate            DateTime
   requiredDeliveryDate DateTime
   salesRepresentative  String
