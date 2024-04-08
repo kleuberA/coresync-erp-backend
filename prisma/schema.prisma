@@ -87,7 +87,7 @@ model Meeting {
 }
 
 model Customer {
-  id                 String   @id @default(uuid())
+  id                 String       @id @default(uuid())
   name               String
   phone              String
   email              String
@@ -104,10 +104,11 @@ model Customer {
   geographicLocation String
   preferences        String
   supportHistory     String
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
   companyId          String
-  company            Company  @relation(fields: [companyId], references: [id])
+  company            Company      @relation(fields: [companyId], references: [id])
+  salesOrder         SalesOrder[]
 }
 
 model Supplier {
@@ -183,4 +184,28 @@ model CommentsOrNotes {
   comment   String
   productId String
   product   Product  @relation(fields: [productId], references: [id])
+}
+
+model SalesOrder {
+  id                   String   @id @default(uuid())
+  customerID           String
+  customer             Customer @relation(fields: [customerID], references: [id])
+  orderDate            DateTime
+  requiredDeliveryDate DateTime
+  salesRepresentative  String
+  shippingMethod       String
+  shippingAddress      String
+  billingAddress       String
+  orderStatus          String
+  paymentTerms         String
+  paymentStatus        String
+  orderTotal           String
+  discountsApplied     String
+  itemsOrdered         String
+  specialInstructions  String
+  salesOrderSource     String
+  salesOrderType       String
+  relatedDocuments     String
+  shippingTrackingInfo String
+  orderCompletionDate  DateTime
 }
