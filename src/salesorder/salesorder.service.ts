@@ -1,6 +1,7 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SalesOrder } from './entity/salesorder.entity';
 import { Injectable } from '@nestjs/common';
+import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
 
 @Injectable()
 export class SalesorderService {
@@ -25,6 +26,28 @@ export class SalesorderService {
         if (!existSalesOrder) throw new Error('Sales Order not found');
 
         return existSalesOrder;
+    }
+
+    async createSalesOrder(salesOrder: CreateSalesOrderDTO): Promise<SalesOrder> {
+
+        const existCompany = await this.prisma.company.findUnique({
+            where: { id: salesOrder.companyID },
+            select: { id: true }
+        })
+
+        if (!existCompany) throw new Error('Company not found');
+
+        await this.permissionUser(salesOrder.userId, salesOrder.companyID, 'create');
+
+        const { userId, ...salesOrderData } = salesOrder;
+
+        const newSalesOrder = await this.prisma.salesOrder.create({
+            data: {
+                ...salesOrderData
+            }
+        });
+
+        return newSalesOrder;
     }
 
     async deleteSalesOrder(salesOrderId: string, companyId: string, userId: string): Promise<SalesOrder> {
