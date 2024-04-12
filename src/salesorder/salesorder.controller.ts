@@ -1,7 +1,8 @@
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { SalesorderService } from './salesorder.service';
-import { Controller, Delete, Get, HttpStatus, Param, Res } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
 
 @ApiTags("Sales Order")
 @Controller('salesorder')
@@ -15,6 +16,16 @@ export class SalesorderController {
             return res.status(HttpStatus.OK).json({ message: 'Sales Order fetched successfully!', data: salesOrder });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to fetch sales order!", error: error.message });
+        }
+    }
+
+    @Post("/create")
+    async createSalesOrder(@Res() res: Response, @Body() salesOrderData: CreateSalesOrderDTO) {
+        try {
+            const salesOrder = await this.salesorderService.createSalesOrder(salesOrderData);
+            return res.status(HttpStatus.OK).json({ message: 'Sales Order created successfully!', data: salesOrder });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to create sales order!", error: error.message });
         }
     }
 
