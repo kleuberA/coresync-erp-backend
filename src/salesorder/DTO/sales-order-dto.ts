@@ -1,6 +1,7 @@
 import { IsDateString, IsString } from "class-validator";
 
-export class CreateSalesOrderDTO {
+export class SalesOrderOutputDTO {
+
     @IsString()
     customerID: string;
 
@@ -60,8 +61,4 @@ export class CreateSalesOrderDTO {
 
     @IsDateString()
     orderCompletionDate: Date;
-
-    @IsString()
-    userId: string;
-
 }
