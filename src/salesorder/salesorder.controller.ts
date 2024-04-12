@@ -1,13 +1,27 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
+import { GetSalesOrderFilter } from './interfaces/GetSalesOrderFilter';
+import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
+import { SalesOrderOutputDTO } from './DTO/sales-order-dto';
 import { SalesorderService } from './salesorder.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
 
 @ApiTags("Sales Order")
 @Controller('salesorder')
 export class SalesorderController {
     constructor(private readonly salesorderService: SalesorderService) { }
+
+    @ApiPaginatedResponse(SalesOrderOutputDTO)
+    @Get()
+    async getSalesOrder(@Res() res: Response, @Query() filters: GetSalesOrderFilter) {
+        try {
+            const salesOrder = await this.salesorderService.getSalesOrder(filters);
+            return res.status(HttpStatus.OK).json({ message: 'Sales Order fetched successfully!', data: salesOrder });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to fetch sales order!", error: error.message });
+        }
+    }
 
     @Get("/:id/:companyId")
     async getSalesOrderById(@Res() res: Response, @Param('id') id: string, @Param('companyId') companyId: string) {

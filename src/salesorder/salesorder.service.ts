@@ -1,11 +1,45 @@
+import { GetSalesOrderFilter } from './interfaces/GetSalesOrderFilter';
+import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
+import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
+import { SalesOrderOutputDTO } from './DTO/sales-order-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SalesOrder } from './entity/salesorder.entity';
+import { createPaginator } from 'prisma-pagination';
 import { Injectable } from '@nestjs/common';
-import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class SalesorderService {
     constructor(private readonly prisma: PrismaService) { }
+
+    private readonly prismaSalesOrder = this.prisma.salesOrder;
+
+    async getSalesOrder(filters: GetSalesOrderFilter): Promise<PaginatedOutputDto<SalesOrderOutputDTO>> {
+        const where: Prisma.SalesOrderFindManyArgs['where'] = {};
+
+        for (const key in filters) {
+            if (key != 'page' && key != 'pageSize') {
+                where[key] = filters[key];
+            }
+        }
+        const paginate = createPaginator({ perPage: filters.pageSize ?? 10 });
+
+        return paginate<SalesOrderOutputDTO, Prisma.SalesOrderFindManyArgs>(
+            this.prismaSalesOrder,
+            {
+                where,
+                include: {
+
+                },
+                orderBy: {
+                    id: 'desc',
+                },
+            },
+            {
+                page: filters.page ?? 1,
+            },
+        );
+    }
 
     async getSalesOrderById(salesOrderId: string, companyId: string): Promise<SalesOrder> {
 
