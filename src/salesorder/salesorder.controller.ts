@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
 import { GetSalesOrderFilter } from './interfaces/GetSalesOrderFilter';
 import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
+import { UpdateSalesOrderDTO } from './DTO/update-salesorder-dto';
 import { SalesOrderOutputDTO } from './DTO/sales-order-dto';
 import { SalesorderService } from './salesorder.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -40,6 +41,16 @@ export class SalesorderController {
             return res.status(HttpStatus.OK).json({ message: 'Sales Order created successfully!', data: salesOrder });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to create sales order!", error: error.message });
+        }
+    }
+
+    @Patch("/update/:id")
+    async updateSalesOrder(@Res() res: Response, @Param('id') salesOrderId: string, @Body() salesOrderData: UpdateSalesOrderDTO) {
+        try {
+            const salesOrder = await this.salesorderService.updateSalesOrder(salesOrderData, salesOrderId);
+            return res.status(HttpStatus.OK).json({ message: 'Sales Order updated successfully!', data: salesOrder });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: "Failed to update sales order!", error: error.message });
         }
     }
 
