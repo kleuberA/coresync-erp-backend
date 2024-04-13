@@ -1,6 +1,7 @@
 import { GetSalesOrderFilter } from './interfaces/GetSalesOrderFilter';
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
 import { CreateSalesOrderDTO } from './DTO/create-salesorder-dto';
+import { UpdateSalesOrderDTO } from './DTO/update-salesorder-dto';
 import { SalesOrderOutputDTO } from './DTO/sales-order-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SalesOrder } from './entity/salesorder.entity';
@@ -82,6 +83,40 @@ export class SalesorderService {
         });
 
         return newSalesOrder;
+    }
+
+    async updateSalesOrder(salesOrder: UpdateSalesOrderDTO, salesOrderId: string): Promise<SalesOrder> {
+
+        const existCompany = await this.prisma.company.findUnique({
+            where: { id: salesOrder.companyID },
+            select: { id: true }
+        })
+
+        if (!existCompany) throw new Error('Company not found');
+
+        const existSalesOrder = await this.prisma.salesOrder.findUnique({
+            where: {
+                id: salesOrderId,
+                companyID: salesOrder.companyID
+            }
+        })
+
+        if (!existSalesOrder) throw new Error('Sales Order not found');
+
+        await this.permissionUser(salesOrder.userId, salesOrder.companyID, 'update');
+
+        const { userId, ...salesOrderData } = salesOrder;
+
+        const updateSalesOrder = await this.prisma.salesOrder.update({
+            where: {
+                id: salesOrderId
+            },
+            data: {
+                ...salesOrderData
+            }
+        });
+
+        return updateSalesOrder;
     }
 
     async deleteSalesOrder(salesOrderId: string, companyId: string, userId: string): Promise<SalesOrder> {
