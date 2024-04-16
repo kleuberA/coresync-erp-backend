@@ -31,4 +31,38 @@ export class CommentsornotesService {
 
     }
 
+    async deleteCommentsOrNotes(id: string, userId: string, companyId: string) {
+        const existCommentsOrNotes = await this.prisma.commentsOrNotes.findUnique({
+            where: { id }
+        });
+
+        if (!existCommentsOrNotes) throw new Error('Comments or Notes does not exist!');
+
+        await this.permissionUser(userId, companyId, 'delete');
+
+        return await this.prisma.commentsOrNotes.delete({
+            where: { id }
+        })
+
+    }
+
+
+    async permissionUser(userId: string, companyId: string, method: string) {
+        const userPermission = await this.prisma.user.findFirst({
+            where: {
+                id: userId,
+                companyId: companyId
+            },
+            select: {
+                roles: {
+                    where: {
+                        name: 'admin_company',
+                    }
+                }
+            }
+        });
+
+        if (!userPermission) throw new Error(`User not authorized to ${method} product.`);
+    }
+
 }
