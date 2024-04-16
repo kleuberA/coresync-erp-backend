@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { CommentsornotesService } from './commentsornotes.service';
 import { Response } from 'express';
 import { CreateCommentsOrNotesDTO } from './DTO/create-comments-or-notes-dto';
@@ -24,6 +24,16 @@ export class CommentsornotesController {
             return res.status(HttpStatus.OK).json({ message: 'Comments or notes created successfully!', data: comments });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error creating comments or notes!', error: error.message });
+        }
+    }
+
+    @Delete("/delete/:id/:userId/:companyId")
+    async deleteCommentsOrNotes(@Res() res: Response, @Param('id') id: string, @Param('userId') userId: string, @Param('companyId') companyId: string) {
+        try {
+            await this.commentsornotesService.deleteCommentsOrNotes(id, userId, companyId);
+            return res.status(HttpStatus.OK).json({ message: 'Comments or notes deleted successfully!' });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error deleting comments or notes!', error: error.message });
         }
     }
 
