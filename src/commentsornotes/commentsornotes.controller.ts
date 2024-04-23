@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
 import { CommentsornotesService } from './commentsornotes.service';
 import { Response } from 'express';
 import { CreateCommentsOrNotesDTO } from './DTO/create-comments-or-notes-dto';
+import { UpdateCommentsOrNotesDTO } from './DTO/update-comments-or-notes-dto';
 
 @Controller('commentsornotes')
 export class CommentsornotesController {
@@ -24,6 +25,16 @@ export class CommentsornotesController {
             return res.status(HttpStatus.OK).json({ message: 'Comments or notes created successfully!', data: comments });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error creating comments or notes!', error: error.message });
+        }
+    }
+
+    @Patch("/update/:id")
+    async updateCommentsOrNotes(@Res() res: Response, @Param('id') id: string, @Body() commentsOrNotesData: UpdateCommentsOrNotesDTO) {
+        try {
+            const comments = await this.commentsornotesService.updateCommentsOrNotes(id, commentsOrNotesData);
+            return res.status(HttpStatus.OK).json({ message: 'Comments or notes updated successfully!', data: comments });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Error updating comments or notes!', error: error.message });
         }
     }
 
