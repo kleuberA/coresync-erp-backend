@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCommentsOrNotesDTO } from './DTO/create-comments-or-notes-dto';
+import { UpdateCommentsOrNotesDTO } from './DTO/update-comments-or-notes-dto';
 
 @Injectable()
 export class CommentsornotesService {
@@ -29,6 +30,23 @@ export class CommentsornotesService {
             }
         });
 
+    }
+
+    async updateCommentsOrNotes(idCommentsOrNotes: string, commentsOrNotesData: UpdateCommentsOrNotesDTO) {
+
+        const existCommentsOrNotes = await this.prisma.commentsOrNotes.findUnique({
+            where: { id: idCommentsOrNotes }
+        });
+
+        if (!existCommentsOrNotes) throw new Error('Comments or Notes does not exist!');
+
+        return await this.prisma.commentsOrNotes.update({
+            where: { id: idCommentsOrNotes },
+            data: {
+                ...commentsOrNotesData,
+                date: new Date().toISOString()
+            }
+        });
     }
 
     async deleteCommentsOrNotes(id: string, userId: string, companyId: string) {
