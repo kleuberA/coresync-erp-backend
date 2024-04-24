@@ -147,7 +147,6 @@ model Product {
   unitOfMeasure        String
   weight               String
   dimensions           String
-  stock                String
   manufactureDate      DateTime
   expirationDate       DateTime
   purchase             String
@@ -160,6 +159,7 @@ model Product {
   categories           Categories[]
   salesHistory         SalesHistory[]
   commentsOrNotes      CommentsOrNotes[]
+  stock                Stock[]
   supplierId           String
   supplier             Supplier          @relation(fields: [supplierId], references: [id])
 }
@@ -211,4 +211,27 @@ model SalesOrder {
   relatedDocuments     String
   shippingTrackingInfo String
   orderCompletionDate  DateTime
+}
+
+model Stock {
+  id                        String   @id @default(uuid())
+  productId                 String
+  product                   Product  @relation(fields: [productId], references: [id])
+  availableQuantity         String
+  minimumStockQuantity      String
+  maximumStockQuantity      String
+  stockLocation             String
+  entryDate                 DateTime
+  exitDate                  DateTime
+  reasonForStockEntry       String
+  reasonForStockRemoval     String
+  itemStatus                String
+  unitCostPrice             String
+  unitSellingPrice          String
+  totalStockValue           String
+  lotOrSerialNumber         String
+  expirationDate            DateTime
+  specificStorageConditions String
+  stockMovementHistory      String
+  stockController           String
 }
