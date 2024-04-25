@@ -1,0 +1,39 @@
+import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
+import { GetStockFilter } from './interfaces/GetStockFilter';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { createPaginator } from 'prisma-pagination';
+import { StockOutputDTO } from './DTO/stock-dto';
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+
+@Injectable()
+export class StockService {
+    constructor(private readonly prisma: PrismaService) { }
+
+    private readonly prismaStock = this.prisma.stock;
+
+    async getStocks(filters: GetStockFilter): Promise<PaginatedOutputDto<StockOutputDTO>> {
+        const where: Prisma.StockFindManyArgs['where'] = {};
+
+        for (const key in filters) {
+            if (key != 'page' && key != 'pageSize') {
+                where[key] = filters[key];
+            }
+        }
+        const paginate = createPaginator({ perPage: filters.pageSize ?? 10 });
+
+        return paginate<StockOutputDTO, Prisma.StockFindManyArgs>(
+            this.prismaStock,
+            {
+                where,
+                orderBy: {
+                    id: 'desc',
+                },
+            },
+            {
+                page: filters.page ?? 1,
+            },
+        );
+    }
+
+}
