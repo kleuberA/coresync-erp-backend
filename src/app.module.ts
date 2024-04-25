@@ -37,13 +37,16 @@ import { SalesorderModule } from './salesorder/salesorder.module';
 import { CommentsornotesController } from './commentsornotes/commentsornotes.controller';
 import { CommentsornotesService } from './commentsornotes/commentsornotes.service';
 import { CommentsornotesModule } from './commentsornotes/commentsornotes.module';
+import { StockService } from './stock/stock.service';
+import { StockController } from './stock/stock.controller';
+import { StockModule } from './stock/stock.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule, ProductModule, SalesorderModule, CommentsornotesModule],
-  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController, SalesorderController, CommentsornotesController],
+  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule, ProductModule, SalesorderModule, CommentsornotesModule, StockModule],
+  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController, SalesorderController, CommentsornotesController, StockController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService, SalesorderService, CommentsornotesService],
+  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService, SalesorderService, CommentsornotesService, StockService],
 })
 export class AppModule { }
