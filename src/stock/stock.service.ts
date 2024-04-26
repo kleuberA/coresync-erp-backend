@@ -3,7 +3,7 @@ import { GetStockFilter } from './interfaces/GetStockFilter';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createPaginator } from 'prisma-pagination';
 import { StockOutputDTO } from './DTO/stock-dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -34,6 +34,18 @@ export class StockService {
                 page: filters.page ?? 1,
             },
         );
+    }
+
+    async getStockById(id: string): Promise<StockOutputDTO> {
+        const stock = await this.prisma.stock.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!stock) throw new NotFoundException('Stock not found!');
+
+        return stock;
     }
 
 }
