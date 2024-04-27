@@ -5,6 +5,7 @@ import { createPaginator } from 'prisma-pagination';
 import { StockOutputDTO } from './DTO/stock-dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateStockDTO } from './DTO/create-stock-dto';
 
 @Injectable()
 export class StockService {
@@ -46,6 +47,20 @@ export class StockService {
         if (!stock) throw new NotFoundException('Stock not found!');
 
         return stock;
+    }
+
+    async createStock(data: CreateStockDTO): Promise<StockOutputDTO> {
+        const productExist = await this.prisma.product.findUnique({
+            where: {
+                id: data.productId,
+            },
+        });
+
+        if (!productExist) throw new NotFoundException('Product not found!');
+
+        return this.prismaStock.create({
+            data,
+        });
     }
 
 }
