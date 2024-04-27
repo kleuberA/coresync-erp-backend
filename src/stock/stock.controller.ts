@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
 import { GetStockFilter } from './interfaces/GetStockFilter';
 import { CreateStockDTO } from './DTO/create-stock-dto';
@@ -40,6 +40,16 @@ export class StockController {
             return res.status(HttpStatus.OK).json({ message: 'Stock created successfully!', data: stock });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while creating stock.', error: error.message });
+        }
+    }
+
+    @Delete('/:id')
+    async deleteStock(@Res() res: Response, @Param('id') id: string) {
+        try {
+            await this.stockService.deleteStock(id);
+            return res.status(HttpStatus.OK).json({ message: 'Stock deleted successfully!' });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'An error occurred while deleting stock.', error: error.message });
         }
     }
 
