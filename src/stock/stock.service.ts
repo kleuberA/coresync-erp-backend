@@ -3,7 +3,7 @@ import { GetStockFilter } from './interfaces/GetStockFilter';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createPaginator } from 'prisma-pagination';
 import { StockOutputDTO } from './DTO/stock-dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateStockDTO } from './DTO/create-stock-dto';
 
@@ -58,8 +58,26 @@ export class StockService {
 
         if (!productExist) throw new NotFoundException('Product not found!');
 
-        return this.prismaStock.create({
+        return await this.prismaStock.create({
             data,
+        });
+    }
+
+    async deleteStock(idStock: string) {
+        const stock = await this.prismaStock.findUnique({
+            where: {
+                id: idStock,
+            },
+        });
+
+        if (!stock) throw new NotFoundException('Stock not found!');
+
+        if (Number(stock.availableQuantity) > 0) throw new BadRequestException('Stock has available quantity!');
+
+        return await this.prismaStock.delete({
+            where: {
+                id: idStock,
+            },
         });
     }
 
