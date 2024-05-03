@@ -6,6 +6,7 @@ import { StockOutputDTO } from './DTO/stock-dto';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateStockDTO } from './DTO/create-stock-dto';
+import { UpdateStockDTO } from './DTO/update-stock-dto';
 
 @Injectable()
 export class StockService {
@@ -61,6 +62,28 @@ export class StockService {
         return await this.prismaStock.create({
             data,
         });
+    }
+
+    async updateStock(idStock: string, dataUpdateStock: UpdateStockDTO) {
+        const existStock = await this.prisma.stock.findUnique({
+            where: {
+                id: idStock,
+            },
+        })
+
+        if (!existStock) throw new NotFoundException('Stock not found!');
+
+        if (Number(dataUpdateStock.availableQuantity) < 0) throw new BadRequestException('Available quantity must be greater than 0!');
+
+        return await this.prisma.stock.update({
+            where: {
+                id: idStock,
+            },
+            data: {
+                ...dataUpdateStock
+            },
+        })
+
     }
 
     async deleteStock(idStock: string) {
