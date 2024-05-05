@@ -162,6 +162,7 @@ model Product {
   stock                Stock[]
   supplierId           String
   supplier             Supplier          @relation(fields: [supplierId], references: [id])
+  production           Production[]
 }
 
 model Categories {
@@ -234,4 +235,28 @@ model Stock {
   specificStorageConditions String
   stockMovementHistory      String
   stockController           String
+}
+
+model Production {
+  id                   String   @id @default(uuid())
+  productId            String
+  product              Product  @relation(fields: [productId], references: [id])
+  billOfMaterials      String
+  productionQuantity   String
+  scheduledStartDate   DateTime
+  scheduledEndDate     DateTime
+  actualStartDate      DateTime
+  actualEndDate        DateTime
+  productionStatus     String
+  productionPriority   String
+  workCenter           String
+  productionSupervisor String
+  productionMethod     String
+  machineUsed          String
+  laborHours           String
+  qualityControlChecks String
+  scrapOrWaste         String
+  productionCost       String
+  productionEfficiency String
+  productionNotes      String
 }
