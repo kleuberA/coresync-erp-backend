@@ -5,6 +5,7 @@ import { ProductionOutputDTO } from './DTO/production-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createPaginator } from 'prisma-pagination';
 import { Prisma } from '@prisma/client';
+import { CreateProductionDTO } from './DTO/create-production-dto';
 
 @Injectable()
 export class ProductionService {
@@ -49,6 +50,26 @@ export class ProductionService {
         if (!productionExist) throw new BadRequestException('Production not found!');
 
         return productionExist;
+
+    }
+
+    async createProduction(dataProduction: CreateProductionDTO): Promise<ProductionOutputDTO> {
+
+        const productExist = await this.prisma.product.findUnique({
+            where: {
+                id: dataProduction.productId
+            }
+        })
+
+        if (!productExist) throw new BadRequestException('Product not found!');
+
+        const production = await this.prismaProducions.create({
+            data: {
+                ...dataProduction
+            }
+        });
+
+        return production;
 
     }
 
