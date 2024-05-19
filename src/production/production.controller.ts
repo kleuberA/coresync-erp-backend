@@ -1,10 +1,11 @@
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
-import { Controller, Get, HttpStatus, Param, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
 import { GetProductionsFilter } from './GetProductionsFilter';
 import { ProductionOutputDTO } from './DTO/production-dto';
 import { ProductionService } from './production.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { CreateProductionDTO } from './DTO/create-production-dto';
 
 @ApiTags("Production")
 @Controller('production')
@@ -29,6 +30,16 @@ export class ProductionController {
             return res.status(HttpStatus.OK).json({ message: 'Production fetched successfully!', data: production })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to fetch production!', error: error.message })
+        }
+    }
+
+    @Post("/create")
+    async createProduction(@Res() res: Response, @Body() data: CreateProductionDTO) {
+        try {
+            const production = await this.productionService.createProduction(data);
+            return res.status(HttpStatus.OK).json({ message: 'Production created successfully!', data: production })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to create production!', error: error.message })
         }
     }
 
