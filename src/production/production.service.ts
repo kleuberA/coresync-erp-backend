@@ -6,12 +6,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { createPaginator } from 'prisma-pagination';
 import { Prisma } from '@prisma/client';
 import { CreateProductionDTO } from './DTO/create-production-dto';
+import { UpdateProductionDTO } from './DTO/update-production-dto';
 
 @Injectable()
 export class ProductionService {
     constructor(private readonly prisma: PrismaService) { }
 
-    private readonly prismaProducions = this.prisma.production;
+    private readonly prismaProductions = this.prisma.production;
 
     async getAllProductions(filters: GetProductionsFilter): Promise<PaginatedOutputDto<ProductionOutputDTO>> {
         const where: Prisma.ProductionFindManyArgs['where'] = {};
@@ -25,7 +26,7 @@ export class ProductionService {
         const paginate = createPaginator({ perPage: filters.pageSize ?? 10 });
 
         return paginate<ProductionOutputDTO, Prisma.ProductionFindManyArgs>(
-            this.prismaProducions,
+            this.prismaProductions,
             {
                 where,
                 include: {
@@ -63,7 +64,7 @@ export class ProductionService {
 
         if (!productExist) throw new BadRequestException('Product not found!');
 
-        const production = await this.prismaProducions.create({
+        const production = await this.prismaProductions.create({
             data: {
                 ...dataProduction
             }
@@ -71,6 +72,39 @@ export class ProductionService {
 
         return production;
 
+    }
+
+    async UpdateProduction(idProduction: string, dataUpdateProduction: UpdateProductionDTO): Promise<ProductionOutputDTO> {
+        const productionExist = await this.prismaProductions.findUnique({
+            where: {
+                id: idProduction
+            }
+        });
+
+        if (!productionExist) throw new BadRequestException('Production not found!');
+
+        const supplier = await this.prisma.supplier.findUnique({
+            where: {
+                id: dataUpdateProduction.supplierId
+            }
+        })
+
+        if (!supplier) throw new BadRequestException('Supplier not found!');
+
+        await this.permissionUser(dataUpdateProduction.userId, supplier.companyId, 'update');
+
+        const { userId, supplierId, ...newDataUpdateProduction } = dataUpdateProduction;
+
+        const production = await this.prismaProductions.update({
+            where: {
+                id: idProduction
+            },
+            data: {
+                ...newDataUpdateProduction
+            }
+        });
+
+        return production;
     }
 
     async permissionUser(userId: string, companyId: string, method: string) {
