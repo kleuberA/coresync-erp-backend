@@ -73,4 +73,22 @@ export class ProductionService {
 
     }
 
+    async permissionUser(userId: string, companyId: string, method: string) {
+        const userPermission = await this.prisma.user.findFirst({
+            where: {
+                id: userId,
+                companyId: companyId
+            },
+            select: {
+                roles: {
+                    where: {
+                        name: 'admin_company',
+                    }
+                }
+            }
+        });
+
+        if (!userPermission) throw new Error(`User not authorized to ${method} product.`);
+    }
+
 }
