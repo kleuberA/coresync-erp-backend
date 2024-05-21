@@ -1,12 +1,12 @@
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
+import { UpdateProductionDTO } from './DTO/update-production-dto';
+import { CreateProductionDTO } from './DTO/create-production-dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { GetProductionsFilter } from './GetProductionsFilter';
 import { ProductionOutputDTO } from './DTO/production-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createPaginator } from 'prisma-pagination';
 import { Prisma } from '@prisma/client';
-import { CreateProductionDTO } from './DTO/create-production-dto';
-import { UpdateProductionDTO } from './DTO/update-production-dto';
 
 @Injectable()
 export class ProductionService {
@@ -105,6 +105,26 @@ export class ProductionService {
         });
 
         return production;
+    }
+
+    async deleteProduction(idProduction: string, userId: string, companyId: string): Promise<ProductionOutputDTO> {
+
+        const productionExist = await this.prisma.production.findUnique({
+            where: {
+                id: idProduction
+            }
+        })
+
+        if (!productionExist) throw new BadRequestException('Production not found!');
+
+        await this.permissionUser(userId, companyId, "delete");
+
+        return await this.prismaProductions.delete({
+            where: {
+                id: idProduction
+            }
+        });
+
     }
 
     async permissionUser(userId: string, companyId: string, method: string) {

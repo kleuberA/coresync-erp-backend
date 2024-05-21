@@ -1,12 +1,12 @@
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
-import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Query, Res } from '@nestjs/common';
+import { CreateProductionDTO } from './DTO/create-production-dto';
+import { UpdateProductionDTO } from './DTO/update-production-dto';
 import { GetProductionsFilter } from './GetProductionsFilter';
 import { ProductionOutputDTO } from './DTO/production-dto';
 import { ProductionService } from './production.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { CreateProductionDTO } from './DTO/create-production-dto';
-import { UpdateProductionDTO } from './DTO/update-production-dto';
 
 @ApiTags("Production")
 @Controller('production')
@@ -54,4 +54,13 @@ export class ProductionController {
         }
     }
 
+    @Delete("/delete/:id/:userId/:companyId")
+    async deleteProduction(@Res() res: Response, @Param("id") id: string, @Param("userId") userId: string, @Param("companyId") companyId: string) {
+        try {
+            await this.productionService.deleteProduction(id, userId, companyId);
+            return res.status(HttpStatus.OK).json({ message: 'Production deleted successfully!' })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to delete production!', error: error.message })
+        }
+    }
 }
