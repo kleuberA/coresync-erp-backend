@@ -94,6 +94,13 @@ export class ProductionService {
 
         await this.permissionUser(dataUpdateProduction.userId, supplier.companyId, 'update');
 
+        this.notificationsGateway.sendNotification(
+            {
+                userId: dataUpdateProduction.userId,
+                message: `Updated production.`
+            }
+        );
+
         const { userId, supplierId, ...newDataUpdateProduction } = dataUpdateProduction;
 
         const production = await this.prismaProductions.update({
