@@ -1,3 +1,4 @@
+import { NotificationsGateway } from 'src/notifications/notifications.gateway';
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
 import { UpdateProductionDTO } from './DTO/update-production-dto';
 import { CreateProductionDTO } from './DTO/create-production-dto';
@@ -10,7 +11,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProductionService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService, private readonly notificationsGateway: NotificationsGateway) { }
 
     private readonly prismaProductions = this.prisma.production;
 
