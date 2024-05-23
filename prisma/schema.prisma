@@ -110,6 +110,7 @@ model Customer {
   companyId          String
   company            Company      @relation(fields: [companyId], references: [id])
   salesOrder         SalesOrder[]
+  CRM                CRM[]
 }
 
 model Supplier {
@@ -259,4 +260,34 @@ model Production {
   productionCost       String
   productionEfficiency String
   productionNotes      String
+}
+
+model CRM {
+  id                       String   @id @default(uuid())
+  customerID               String
+  customer                 Customer @relation(fields: [customerID], references: [id])
+  customerName             String
+  customerType             String
+  marketSegment            String
+  creationDate             DateTime
+  lastInteraction          DateTime
+  purchaseHistory          String
+  customerPreferences      String
+  revenuePotential         String
+  customerStatus           String
+  notes                    String
+  associatedCampaigns      String
+  customerFeedback         String
+  touchpoints              String
+  responsibleDepartment    String
+  customerBirthday         DateTime
+  customerRating           String
+  supportHistory           String
+  contactNetwork           String
+  communicationPreferences String
+  visitHistory             String
+  financialSituation       String
+  customerInterests        String
+  associatedDocumentation  String
+  customerLifecycleStage   String
 }
