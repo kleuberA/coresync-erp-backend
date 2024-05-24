@@ -43,13 +43,15 @@ import { StockModule } from './stock/stock.module';
 import { ProductionController } from './production/production.controller';
 import { ProductionService } from './production/production.service';
 import { ProductionModule } from './production/production.module';
+import { CrmService } from './crm/crm.service';
+import { CrmController } from './crm/crm.controller';
 
 @Module({
   imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule, ProductModule, SalesorderModule, CommentsornotesModule, StockModule, ProductionModule],
-  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController, SalesorderController, CommentsornotesController, StockController, ProductionController],
+  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController, SalesorderController, CommentsornotesController, StockController, ProductionController, CrmController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService, SalesorderService, CommentsornotesService, StockService, ProductionService],
+  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService, SalesorderService, CommentsornotesService, StockService, ProductionService, CrmService],
 })
 export class AppModule { }
