@@ -25,11 +25,11 @@ model Company {
   phone      String
   address    Address?
   customers  Customer[]
-  suppliers  Supplier[]
   projects   Project[]
   roles      Role[]
-  users      User[]
   salesOrder SalesOrder[]
+  suppliers  Supplier[]
+  users      User[]
 }
 
 model Role {
@@ -108,9 +108,9 @@ model Customer {
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
   companyId          String
+  CRM                CRM[]
   company            Company      @relation(fields: [companyId], references: [id])
   salesOrder         SalesOrder[]
-  CRM                CRM[]
 }
 
 model Supplier {
@@ -137,8 +137,8 @@ model Supplier {
   createdAt                    DateTime  @default(now())
   updatedAt                    DateTime  @updatedAt
   companyId                    String
-  company                      Company   @relation(fields: [companyId], references: [id])
   products                     Product[]
+  company                      Company   @relation(fields: [companyId], references: [id])
 }
 
 model Product {
@@ -157,19 +157,19 @@ model Product {
   minimumStockQuantity String
   maximumStockQuantity String
   replenishment        String
-  categories           Categories[]
-  salesHistory         SalesHistory[]
-  commentsOrNotes      CommentsOrNotes[]
-  stock                Stock[]
   supplierId           String
+  commentsOrNotes      CommentsOrNotes[]
   supplier             Supplier          @relation(fields: [supplierId], references: [id])
   production           Production[]
+  salesHistory         SalesHistory[]
+  stock                Stock[]
+  categories           Categories[]      @relation("CategoriesToProduct")
 }
 
 model Categories {
   id      String    @id @default(uuid())
   name    String
-  product Product[]
+  product Product[] @relation("CategoriesToProduct")
 }
 
 model SalesHistory {
@@ -192,9 +192,7 @@ model CommentsOrNotes {
 model SalesOrder {
   id                   String   @id @default(uuid())
   customerID           String
-  customer             Customer @relation(fields: [customerID], references: [id])
   companyID            String
-  company              Company  @relation(fields: [companyID], references: [id])
   orderDate            DateTime
   requiredDeliveryDate DateTime
   salesRepresentative  String
@@ -213,12 +211,13 @@ model SalesOrder {
   relatedDocuments     String
   shippingTrackingInfo String
   orderCompletionDate  DateTime
+  company              Company  @relation(fields: [companyID], references: [id])
+  customer             Customer @relation(fields: [customerID], references: [id])
 }
 
 model Stock {
   id                        String   @id @default(uuid())
   productId                 String
-  product                   Product  @relation(fields: [productId], references: [id])
   availableQuantity         String
   minimumStockQuantity      String
   maximumStockQuantity      String
@@ -236,12 +235,12 @@ model Stock {
   specificStorageConditions String
   stockMovementHistory      String
   stockController           String
+  product                   Product  @relation(fields: [productId], references: [id])
 }
 
 model Production {
   id                   String   @id @default(uuid())
   productId            String
-  product              Product  @relation(fields: [productId], references: [id])
   billOfMaterials      String
   productionQuantity   String
   scheduledStartDate   DateTime
@@ -260,12 +259,12 @@ model Production {
   productionCost       String
   productionEfficiency String
   productionNotes      String
+  product              Product  @relation(fields: [productId], references: [id])
 }
 
 model CRM {
   id                       String   @id @default(uuid())
   customerID               String
-  customer                 Customer @relation(fields: [customerID], references: [id])
   customerName             String
   customerType             String
   marketSegment            String
@@ -290,4 +289,5 @@ model CRM {
   customerInterests        String
   associatedDocumentation  String
   customerLifecycleStage   String
+  customer                 Customer @relation(fields: [customerID], references: [id])
 }
