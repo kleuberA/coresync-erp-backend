@@ -1,0 +1,27 @@
+-- CreateTable
+CREATE TABLE "Supplier" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "companyName" TEXT NOT NULL,
+    "contactPerson" TEXT NOT NULL,
+    "contactTitle" TEXT NOT NULL,
+    "contactEmail" TEXT NOT NULL,
+    "contactPhone" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "paymentTerms" TEXT NOT NULL,
+    "leadTime" TEXT NOT NULL,
+    "minimumOrderQuantity" TEXT NOT NULL,
+    "preferredCommunicationMethod" TEXT NOT NULL,
+    "supplierRating" TEXT NOT NULL,
+    "supplierCategory" TEXT NOT NULL,
+    "certifications" TEXT NOT NULL,
+    "contractExpiryDate" DATETIME NOT NULL,
+    "bankingInformation" TEXT NOT NULL,
+    "taxIdentificationNumber" TEXT NOT NULL,
+    "discounts" TEXT NOT NULL,
+    "notesOrComments" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "companyId" TEXT NOT NULL,
+    CONSTRAINT "Supplier_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

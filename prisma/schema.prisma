@@ -8,24 +8,28 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   name      String?
   password  String
   companyId String?
   tasks     Task[]
-  company   Company? @relation(fields: [companyId], references: [id])
-  roles     Role[]   @relation("UserRoles")
+  company   Company?  @relation(fields: [companyId], references: [id])
+  meetings  Meeting[] @relation("MeetingUsers")
+  roles     Role[]    @relation("UserRoles")
 }
 
 model Company {
-  id       String    @id @default(uuid())
-  name     String
-  phone    String
-  address  Address?
-  projects Project[]
-  roles    Role[]
-  users    User[]
+  id         String       @id @default(uuid())
+  name       String
+  phone      String
+  address    Address?
+  customers  Customer[]
+  projects   Project[]
+  roles      Role[]
+  salesOrder SalesOrder[]
+  suppliers  Supplier[]
+  users      User[]
 }
 
 model Role {
@@ -47,14 +51,15 @@ model Address {
 }
 
 model Project {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
   companyId  String?
   start_date DateTime
   end_date   DateTime
   active     Boolean
   creatorId  String
-  company    Company? @relation(fields: [companyId], references: [id])
+  meetings   Meeting[]
+  company    Company?  @relation(fields: [companyId], references: [id])
   tasks      Task[]
 }
 
@@ -68,6 +73,221 @@ model Task {
   end_date   DateTime
   active     Boolean
   status     String   @default("OPEN")
-  assignee   User?    @relation(fields: [assigneeId], references: [id])
   project    Project? @relation(fields: [projectId], references: [id])
+  assignee   User?    @relation(fields: [assigneeId], references: [id])
+}
+
+model Meeting {
+  id         String   @id @default(uuid())
+  name       String
+  projectId  String?
+  creatorId  String
+  start_date DateTime
+  project    Project? @relation(fields: [projectId], references: [id])
+  users      User[]   @relation("MeetingUsers")
+}
+
+model Customer {
+  id                 String       @id @default(uuid())
+  name               String
+  phone              String
+  email              String
+  type               String
+  fiscalCode         String
+  registrationDate   DateTime
+  creditLimit        Float
+  paymentTerms       String
+  purchaseHistory    String
+  contactInformation String
+  classification     String
+  status             Boolean
+  references         String
+  geographicLocation String
+  preferences        String
+  supportHistory     String
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  companyId          String
+  CRM                CRM[]
+  company            Company      @relation(fields: [companyId], references: [id])
+  salesOrder         SalesOrder[]
+}
+
+model Supplier {
+  id                           String    @id @default(uuid())
+  companyName                  String
+  contactPerson                String
+  contactTitle                 String
+  contactEmail                 String
+  contactPhone                 String
+  address                      String
+  country                      String
+  paymentTerms                 String
+  leadTime                     String
+  minimumOrderQuantity         String
+  preferredCommunicationMethod String
+  supplierRating               String
+  supplierCategory             String
+  certifications               String
+  contractExpiryDate           DateTime
+  bankingInformation           String
+  taxIdentificationNumber      String
+  discounts                    String
+  notesOrComments              String
+  createdAt                    DateTime  @default(now())
+  updatedAt                    DateTime  @updatedAt
+  companyId                    String
+  products                     Product[]
+  company                      Company   @relation(fields: [companyId], references: [id])
+}
+
+model Product {
+  id                   String            @id @default(uuid())
+  name                 String
+  detailedDescription  String
+  unitOfMeasure        String
+  weight               String
+  dimensions           String
+  manufactureDate      DateTime
+  expirationDate       DateTime
+  purchase             String
+  selling              String
+  profit               String
+  minimumOrderQuantity String
+  minimumStockQuantity String
+  maximumStockQuantity String
+  replenishment        String
+  supplierId           String
+  commentsOrNotes      CommentsOrNotes[]
+  supplier             Supplier          @relation(fields: [supplierId], references: [id])
+  production           Production[]
+  salesHistory         SalesHistory[]
+  stock                Stock[]
+  categories           Categories[]      @relation("CategoriesToProduct")
+}
+
+model Categories {
+  id      String    @id @default(uuid())
+  name    String
+  product Product[] @relation("CategoriesToProduct")
+}
+
+model SalesHistory {
+  id        String   @id @default(uuid())
+  date      DateTime
+  quantity  String
+  price     String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model CommentsOrNotes {
+  id        String   @id @default(uuid())
+  date      DateTime
+  comment   String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model SalesOrder {
+  id                   String   @id @default(uuid())
+  customerID           String
+  companyID            String
+  orderDate            DateTime
+  requiredDeliveryDate DateTime
+  salesRepresentative  String
+  shippingMethod       String
+  shippingAddress      String
+  billingAddress       String
+  orderStatus          String
+  paymentTerms         String
+  paymentStatus        String
+  orderTotal           String
+  discountsApplied     String
+  itemsOrdered         String
+  specialInstructions  String
+  salesOrderSource     String
+  salesOrderType       String
+  relatedDocuments     String
+  shippingTrackingInfo String
+  orderCompletionDate  DateTime
+  company              Company  @relation(fields: [companyID], references: [id])
+  customer             Customer @relation(fields: [customerID], references: [id])
+}
+
+model Stock {
+  id                        String   @id @default(uuid())
+  productId                 String
+  availableQuantity         String
+  minimumStockQuantity      String
+  maximumStockQuantity      String
+  stockLocation             String
+  entryDate                 DateTime
+  exitDate                  DateTime
+  reasonForStockEntry       String
+  reasonForStockRemoval     String
+  itemStatus                String
+  unitCostPrice             String
+  unitSellingPrice          String
+  totalStockValue           String
+  lotOrSerialNumber         String
+  expirationDate            DateTime
+  specificStorageConditions String
+  stockMovementHistory      String
+  stockController           String
+  product                   Product  @relation(fields: [productId], references: [id])
+}
+
+model Production {
+  id                   String   @id @default(uuid())
+  productId            String
+  billOfMaterials      String
+  productionQuantity   String
+  scheduledStartDate   DateTime
+  scheduledEndDate     DateTime
+  actualStartDate      DateTime
+  actualEndDate        DateTime
+  productionStatus     String
+  productionPriority   String
+  workCenter           String
+  productionSupervisor String
+  productionMethod     String
+  machineUsed          String
+  laborHours           String
+  qualityControlChecks String
+  scrapOrWaste         String
+  productionCost       String
+  productionEfficiency String
+  productionNotes      String
+  product              Product  @relation(fields: [productId], references: [id])
+}
+
+model CRM {
+  id                       String   @id @default(uuid())
+  customerID               String
+  customerName             String
+  customerType             String
+  marketSegment            String
+  creationDate             DateTime
+  lastInteraction          DateTime
+  purchaseHistory          String
+  customerPreferences      String
+  revenuePotential         String
+  customerStatus           String
+  notes                    String
+  associatedCampaigns      String
+  customerFeedback         String
+  touchpoints              String
+  responsibleDepartment    String
+  customerBirthday         DateTime
+  customerRating           String
+  supportHistory           String
+  contactNetwork           String
+  communicationPreferences String
+  visitHistory             String
+  financialSituation       String
+  customerInterests        String
+  associatedDocumentation  String
+  customerLifecycleStage   String
+  customer                 Customer @relation(fields: [customerID], references: [id])
 }
