@@ -1,4 +1,4 @@
-import { IsDateString, IsString, MaxLength, MinLength } from "class-validator";
+import { IsDateString, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateProduct {
@@ -39,7 +39,7 @@ export class CreateProduct {
 
     @ApiProperty()
     @IsString()
-    stock: string;
+    stock: string[];
 
     @ApiProperty()
     @IsDateString()
@@ -79,9 +79,23 @@ export class CreateProduct {
 
     @ApiProperty()
     @IsString()
+    @IsNotEmpty()
     supplierId: string;
 
     @ApiProperty()
     @IsString()
     userId: string;
+
+    @ApiProperty({ type: [String] })
+    categories: string[];
+
+    @ApiProperty({ type: [String] })
+    salesHistory: string[];
+
+    @ApiProperty({ type: [String] })
+    commentsOrNotes: string[];
+
+    @ApiProperty({ type: [String] })
+    production: string[];
+
 }

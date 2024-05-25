@@ -9,11 +9,10 @@ export class UpdateProductDTO {
         required: false,
         example: 'Product Name'
     })
-    @IsOptional()
     @IsString()
     @MinLength(3, { message: 'Name is too short' })
     @MaxLength(50, { message: 'Name is too long' })
-    name?: string;
+    name: string;
 
     @ApiProperty({
         description: 'Short description of the product',
@@ -43,9 +42,8 @@ export class UpdateProductDTO {
     dimensions?: string;
 
     @ApiProperty()
-    @IsOptional()
     @IsString()
-    stock?: string;
+    stock: string[];
 
     @ApiProperty()
     @IsOptional()
@@ -94,7 +92,7 @@ export class UpdateProductDTO {
 
     @ApiProperty()
     @IsString()
-    supplierId?: string;
+    supplierId: string;
 
     @ApiProperty()
     @IsString()

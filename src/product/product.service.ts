@@ -68,16 +68,31 @@ export class ProductService {
 
         await this.permissionUser(productData.userId, supplierExist.companyId, 'create');
 
-        const { userId, ...newProductData } = productData;
+        const { userId, supplierId, ...newProductData } = productData;
 
-        const product = await this.prisma.product.create({
+        return await this.prisma.product.create({
             data: {
-                ...newProductData
+                ...newProductData,
+                supplier: {
+                    connect: { id: productData.supplierId }
+                },
+                commentsOrNotes: {
+                    connect: productData.commentsOrNotes.map(comment => ({ id: comment }))
+                },
+                production: {
+                    connect: productData.production.map(production => ({ id: production }))
+                },
+                salesHistory: {
+                    connect: productData.salesHistory.map(sale => ({ id: sale }))
+                },
+                categories: {
+                    connect: productData.categories.map(category => ({ id: category }))
+                },
+                stock: {
+                    connect: productData.stock.map(stock => ({ id: stock }))
+                }
             }
         });
-
-        return product;
-
     }
 
     async updateProduct(productId: string, updateProductData: UpdateProductDTO) {
@@ -93,14 +108,20 @@ export class ProductService {
 
         await this.permissionUser(updateProductData.userId, supplier.companyId, 'update');
 
-        const { userId, ...newProductData } = updateProductData;
+        const { userId, supplierId, ...newProductData } = updateProductData;
 
         return await this.prisma.product.update({
             where: { id: productId },
             data: {
-                ...newProductData
+                ...newProductData,
+                supplier: {
+                    connect: { id: product.supplierId }
+                },
+                stock: {
+                    connect: updateProductData.stock.map(stock => ({ id: stock }))
+                }
             }
-        });
+        })
     }
 
     async deleteProduct(productId: string, userId: string) {
