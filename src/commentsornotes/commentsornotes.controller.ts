@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
-import { CommentsornotesService } from './commentsornotes.service';
-import { Response } from 'express';
-import { CreateCommentsOrNotesDTO } from './DTO/create-comments-or-notes-dto';
 import { UpdateCommentsOrNotesDTO } from './DTO/update-comments-or-notes-dto';
+import { CreateCommentsOrNotesDTO } from './DTO/create-comments-or-notes-dto';
+import { CommentsornotesService } from './commentsornotes.service';
+import { ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
+@ApiTags("Comments or Notes")
 @Controller('commentsornotes')
 export class CommentsornotesController {
     constructor(private readonly commentsornotesService: CommentsornotesService) { }
