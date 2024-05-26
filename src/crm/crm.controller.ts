@@ -22,4 +22,14 @@ export class CrmController {
         }
     }
 
+    @Get("/:id")
+    async getCRMById(@Res() res: Response, @Query('id') crmId: string) {
+        try {
+            const crm = await this.crmService.getCRMById(crmId);
+            return res.status(HttpStatus.OK).json({ message: 'CRM fetched successfully!', data: crm })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to fetch CRM!', error: error.message })
+        }
+    }
+
 }
