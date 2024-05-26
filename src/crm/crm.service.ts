@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { createPaginator } from 'prisma-pagination';
 import { GetCRMFilter } from './GetCRMFilter';
 import { CRMOutputDTO } from './DTO/crm-dto';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -37,6 +37,20 @@ export class CrmService {
                 page: filters.page ?? 1,
             },
         );
+    }
+
+    async getCRMById(crmId: string) {
+
+        const crm = await this.prisma.cRM.findUnique({
+            where: {
+                id: crmId
+            }
+        })
+
+        if (!crm) throw new BadRequestException("CRM not found!");
+
+        return crm;
+
     }
 
 }
