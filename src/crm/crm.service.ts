@@ -1,10 +1,11 @@
 import { PaginatedOutputDto } from 'src/common/PaginatedOutputDto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createPaginator } from 'prisma-pagination';
+import { CreateCRMDTO } from './DTO/create-crm-dto';
 import { GetCRMFilter } from './GetCRMFilter';
 import { CRMOutputDTO } from './DTO/crm-dto';
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { CRM, Prisma } from '@prisma/client';
 
 @Injectable()
 export class CrmService {
@@ -39,7 +40,7 @@ export class CrmService {
         );
     }
 
-    async getCRMById(crmId: string) {
+    async getCRMById(crmId: string): Promise<CRM> {
 
         const crm = await this.prisma.cRM.findUnique({
             where: {
@@ -51,6 +52,21 @@ export class CrmService {
 
         return crm;
 
+    }
+
+    async createCRM(data: CreateCRMDTO): Promise<CRM> {
+
+        const existCustomer = await this.prisma.customer.findUnique({
+            where: {
+                id: data.customerID
+            }
+        })
+
+        if (!existCustomer) throw new BadRequestException("Customer not found!");
+
+        return this.prismaCRM.create({
+            data: { ...data }
+        })
     }
 
 }
