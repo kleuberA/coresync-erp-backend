@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Put, Query, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
 import { CreateCRMDTO } from './DTO/create-crm-dto';
 import { GetCRMFilter } from './GetCRMFilter';
@@ -40,6 +40,16 @@ export class CrmController {
             return res.status(HttpStatus.OK).json({ message: 'CRM created successfully!', data: crm })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to create CRM!', error: error.message })
+        }
+    }
+
+    @Put("/update/:id")
+    async updateCRM(@Res() res: Response, @Query('id') crmId: string, @Body() data: CreateCRMDTO) {
+        try {
+            const crm = await this.crmService.updateCRM(crmId, data);
+            return res.status(HttpStatus.OK).json({ message: 'CRM updated successfully!', data: crm })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to update CRM!', error: error.message })
         }
     }
 
