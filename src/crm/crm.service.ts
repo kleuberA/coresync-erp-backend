@@ -6,6 +6,7 @@ import { CreateCRMDTO } from './DTO/create-crm-dto';
 import { GetCRMFilter } from './GetCRMFilter';
 import { CRMOutputDTO } from './DTO/crm-dto';
 import { CRM, Prisma } from '@prisma/client';
+import { UpdateCRMDTO } from './DTO/update-crm-dto';
 
 @Injectable()
 export class CrmService {
@@ -64,9 +65,30 @@ export class CrmService {
 
         if (!existCustomer) throw new BadRequestException("Customer not found!");
 
-        return this.prismaCRM.create({
+        return await this.prismaCRM.create({
             data: { ...data }
         })
+    }
+
+    async updateCRM(crmId: string, dataUpdateCRM: UpdateCRMDTO): Promise<CRM> {
+
+        const existCRM = await this.prismaCRM.findUnique({
+            where: {
+                id: crmId
+            }
+        })
+
+        if (!existCRM) throw new BadRequestException("CRM not found!");
+
+        return await this.prismaCRM.update({
+            where: {
+                id: crmId
+            },
+            data: {
+                ...dataUpdateCRM
+            }
+        })
+
     }
 
 }
