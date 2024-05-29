@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Put, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Res } from '@nestjs/common';
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
 import { CreateCRMDTO } from './DTO/create-crm-dto';
 import { GetCRMFilter } from './GetCRMFilter';
@@ -50,6 +50,16 @@ export class CrmController {
             return res.status(HttpStatus.OK).json({ message: 'CRM updated successfully!', data: crm })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to update CRM!', error: error.message })
+        }
+    }
+
+    @Delete("/delete/:id")
+    async deleteCRM(@Res() res: Response, @Param('id') crmId: string) {
+        try {
+            await this.crmService.deleteCRM(crmId);
+            return res.status(HttpStatus.OK).json({ message: 'CRM deleted successfully!' })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to delete CRM!', error: error.message })
         }
     }
 

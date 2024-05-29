@@ -91,4 +91,21 @@ export class CrmService {
 
     }
 
+    async deleteCRM(crmId: string) {
+
+        const existCRM = await this.prisma.cRM.findUnique({
+            where: {
+                id: crmId
+            }
+        })
+
+        if (!existCRM) throw new BadRequestException("CRM not found!");
+
+        return await this.prismaCRM.delete({
+            where: {
+                id: crmId
+            }
+        })
+    }
+
 }
