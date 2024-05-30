@@ -30,6 +30,7 @@ model Company {
   salesOrder SalesOrder[]
   suppliers  Supplier[]
   users      User[]
+  logistics  Logistics[]
 }
 
 model Role {
@@ -111,6 +112,7 @@ model Customer {
   CRM                CRM[]
   company            Company      @relation(fields: [companyId], references: [id])
   salesOrder         SalesOrder[]
+  logistics          Logistics[]
 }
 
 model Supplier {
@@ -164,6 +166,7 @@ model Product {
   salesHistory         SalesHistory[]
   stock                Stock[]
   categories           Categories[]      @relation("CategoriesToProduct")
+  logistics            Logistics[]
 }
 
 model Categories {
@@ -290,4 +293,42 @@ model CRM {
   associatedDocumentation  String
   customerLifecycleStage   String
   customer                 Customer @relation(fields: [customerID], references: [id])
+}
+
+model Logistics {
+  id                           String   @id @default(uuid())
+  orderID                      String
+  productID                    String
+  shippingDate                 DateTime
+  estimatedDeliveryDate        DateTime
+  actualDeliveryDate           DateTime
+  shippingMethod               String
+  carrier                      String
+  shippingStatus               String
+  trackingNumber               String
+  totalWeight                  String
+  totalVolume                  String
+  shippingAddress              String
+  deliveryAddress              String
+  shippingCost                 String
+  transportInsurance           String
+  shippingDocumentation        String
+  cargoConditioning            String
+  specialTransportRequirements String
+  logisticsManager             String
+  notesOrComments              String
+  pickupTime                   DateTime
+  deliveryTime                 DateTime
+  trackingEvents               String
+  deliveryConditions           String
+  receivingPerson              String
+  transportIncidents           String
+  freightPaymentMethod         String
+  freightPaymentDate           DateTime
+  qualityCertificates          String
+  companyID                    String
+  customerID                   String
+  company                      Company  @relation(fields: [companyID], references: [id])
+  customer                     Customer @relation(fields: [customerID], references: [id])
+  product                      Product  @relation(fields: [productID], references: [id])
 }
