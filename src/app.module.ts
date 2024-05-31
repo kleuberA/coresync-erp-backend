@@ -45,13 +45,16 @@ import { ProductionService } from './production/production.service';
 import { ProductionModule } from './production/production.module';
 import { CrmService } from './crm/crm.service';
 import { CrmController } from './crm/crm.controller';
+import { LogisticsController } from './logistics/logistics.controller';
+import { LogisticsService } from './logistics/logistics.service';
+import { LogisticsModule } from './logistics/logistics.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule, ProductModule, SalesorderModule, CommentsornotesModule, StockModule, ProductionModule],
-  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController, SalesorderController, CommentsornotesController, StockController, ProductionController, CrmController],
+  imports: [AuthModule, UserModule, PrismaModule, CompanyModule, RoleModule, ProjectModule, TaskModule, MeetingModule, CustomerModule, SupplierModule, ProductModule, SalesorderModule, CommentsornotesModule, StockModule, ProductionModule, LogisticsModule],
+  controllers: [AppController, UserController, CompanyController, ProjectController, TaskController, MeetingController, CustomerController, SupplierController, SalesorderController, CommentsornotesController, StockController, ProductionController, CrmController, LogisticsController],
   providers: [AppService, UserService, Bcrypt, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
-  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService, SalesorderService, CommentsornotesService, StockService, ProductionService, CrmService],
+  }, CompanyService, ProjectService, TaskService, MeetingService, NotificationsGateway, CustomerService, SupplierService, ProductService, SalesorderService, CommentsornotesService, StockService, ProductionService, CrmService, LogisticsService],
 })
 export class AppModule { }
