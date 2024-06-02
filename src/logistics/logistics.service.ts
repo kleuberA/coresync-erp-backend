@@ -5,6 +5,7 @@ import { GetLogisticsFilter } from './GetLogisticsFilter';
 import { LogisticsOutpuDTO } from './DTO/logistics-dto';
 import { createPaginator } from 'prisma-pagination';
 import { Logistics, Prisma } from '@prisma/client';
+import { CreateLogisticsDTO } from './DTO/create-logistics-dto';
 
 @Injectable()
 export class LogisticsService {
@@ -54,6 +55,23 @@ export class LogisticsService {
 
         return existLogist;
 
+    }
+
+    async createLogistics(dataLogistic: CreateLogisticsDTO) {
+
+        const existLogist = await this.prisma.logistics.findUnique({
+            where: {
+                id: dataLogistic.orderID
+            }
+        })
+
+        if (existLogist) throw new BadRequestException("Logistic already exists!");
+
+        return this.prisma.logistics.create({
+            data: {
+                ...dataLogistic
+            }
+        });
     }
 
 }
