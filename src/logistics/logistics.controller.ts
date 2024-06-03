@@ -1,5 +1,5 @@
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
-import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
 import { GetLogisticsFilter } from './GetLogisticsFilter';
 import { LogisticsOutpuDTO } from './DTO/logistics-dto';
 import { LogisticsService } from './logistics.service';
@@ -40,6 +40,16 @@ export class LogisticsController {
             return res.status(HttpStatus.CREATED).json({ message: 'Logistic created successfully!' })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to create Logistic!', error: error.message })
+        }
+    }
+
+    @Delete("/delete/:id")
+    async deleteLogistics(@Res() res: Response, @Param('id') idLogistics: string) {
+        try {
+            await this.logisticsService.deleteLogistics(idLogistics);
+            return res.status(HttpStatus.OK).json({ message: 'Logistic deleted successfully!' })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to delete Logistic!', error: error.message })
         }
     }
 
