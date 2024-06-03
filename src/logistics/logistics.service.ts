@@ -57,7 +57,7 @@ export class LogisticsService {
 
     }
 
-    async createLogistics(dataLogistic: CreateLogisticsDTO) {
+    async createLogistics(dataLogistic: CreateLogisticsDTO): Promise<Logistics> {
 
         const existLogist = await this.prisma.logistics.findUnique({
             where: {
@@ -70,6 +70,22 @@ export class LogisticsService {
         return this.prisma.logistics.create({
             data: {
                 ...dataLogistic
+            }
+        });
+    }
+
+    async deleteLogistics(idLogistic: string) {
+        const existLogist = await this.prisma.logistics.findUnique({
+            where: {
+                id: idLogistic
+            }
+        })
+
+        if (!existLogist) throw new BadRequestException("Logistic not found!");
+
+        return this.prisma.logistics.delete({
+            where: {
+                id: idLogistic
             }
         });
     }
