@@ -6,6 +6,7 @@ import { LogisticsOutpuDTO } from './DTO/logistics-dto';
 import { createPaginator } from 'prisma-pagination';
 import { Logistics, Prisma } from '@prisma/client';
 import { CreateLogisticsDTO } from './DTO/create-logistics-dto';
+import { UpdateLogisticDTO } from './DTO/update-logistic-dto';
 
 @Injectable()
 export class LogisticsService {
@@ -68,6 +69,26 @@ export class LogisticsService {
         if (existLogist) throw new BadRequestException("Logistic already exists!");
 
         return this.prisma.logistics.create({
+            data: {
+                ...dataLogistic
+            }
+        });
+    }
+
+    async updateLogistic(idLogistic: string, dataLogistic: UpdateLogisticDTO): Promise<Logistics> {
+
+        const existLogist = await this.prisma.logistics.findUnique({
+            where: {
+                id: idLogistic
+            }
+        })
+
+        if (!existLogist) throw new BadRequestException("Logistic not found!");
+
+        return this.prisma.logistics.update({
+            where: {
+                id: idLogistic
+            },
             data: {
                 ...dataLogistic
             }

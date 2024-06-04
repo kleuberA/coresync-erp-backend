@@ -1,0 +1,33 @@
+export class UpdateLogisticDTO {
+    orderID: string;
+    productID: string;
+    shippingDate?: Date;
+    estimatedDeliveryDate?: Date;
+    actualDeliveryDate?: Date;
+    shippingMethod?: string;
+    carrier?: string;
+    shippingStatus?: string;
+    trackingNumber?: string;
+    totalWeight?: string;
+    totalVolume?: string;
+    shippingAddress?: string;
+    deliveryAddress?: string;
+    shippingCost?: string;
+    transportInsurance?: string;
+    shippingDocumentation?: string;
+    cargoConditioning?: string;
+    specialTransportRequirements?: string;
+    logisticsManager?: string;
+    notesOrComments?: string;
+    pickupTime?: Date;
+    deliveryTime?: Date;
+    trackingEvents?: string;
+    deliveryConditions?: string;
+    receivingPerson?: string;
+    transportIncidents?: string;
+    freightPaymentMethod?: string;
+    freightPaymentDate?: Date;
+    qualityCertificates?: string;
+    companyID: string;
+    customerID: string;
+}
