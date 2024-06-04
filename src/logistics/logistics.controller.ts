@@ -1,11 +1,12 @@
 import { ApiPaginatedResponse } from 'src/common/decorators/ApiPaginatedResponse';
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Res } from '@nestjs/common';
 import { GetLogisticsFilter } from './GetLogisticsFilter';
 import { LogisticsOutpuDTO } from './DTO/logistics-dto';
 import { LogisticsService } from './logistics.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CreateLogisticsDTO } from './DTO/create-logistics-dto';
+import { UpdateLogisticDTO } from './DTO/update-logistic-dto';
 
 @ApiTags("Logistics")
 @Controller('logistics')
@@ -40,6 +41,16 @@ export class LogisticsController {
             return res.status(HttpStatus.CREATED).json({ message: 'Logistic created successfully!' })
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to create Logistic!', error: error.message })
+        }
+    }
+
+    @Put("/update/:id")
+    async updateLogistics(@Res() res: Response, @Param('id') idLogistics: string, @Body() dataLogistic: UpdateLogisticDTO) {
+        try {
+            await this.logisticsService.updateLogistic(idLogistics, dataLogistic);
+            return res.status(HttpStatus.OK).json({ message: 'Logistic updated successfully!' })
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Failed to update Logistic!', error: error.message })
         }
     }
 
