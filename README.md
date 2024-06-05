@@ -52,3 +52,13 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 | :------------- | :------- | :--------------------------------------------------------------- |
 | `id`           | `string` | **Obrigatório**. O ID do item que você quer                      |
 | `dataLogistic` | `Objeto` | Objeto contendo os atributos que serão atualizados de logistica. |
+
+#### Deletar uma logistica
+
+```http
+  DELETE /api/v1/logistics/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
