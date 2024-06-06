@@ -12,7 +12,48 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 
 ## Documentação da API
 
-#### Retorna todos os itens
+#### Retorna todas as companys
+
+```http
+  GET /api/v1/company
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Cria uma company
+
+```http
+  POST /api/v1/company/create
+```
+
+| Parâmetro     | Tipo     | Descrição                                      |
+| :------------ | :------- | :--------------------------------------------- |
+| `dataCompany` | `Objeto` | Objeto contendo todos os atributos da company. |
+
+#### Atualizar uma company
+
+```http
+  PUT /api/v1/company/update/${id}
+```
+
+| Parâmetro     | Tipo     | Descrição                                                      |
+| :------------ | :------- | :------------------------------------------------------------- |
+| `id`          | `string` | **Obrigatório**. O ID do item que você quer                    |
+| `dataCompany` | `Objeto` | Objeto contendo os atributos que serão atualizados de company. |
+
+#### Deletar uma company
+
+```http
+  DELETE /api/v1/company/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todas as logisticas
 
 ```http
   GET /api/v1/logistics
