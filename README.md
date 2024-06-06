@@ -53,6 +53,57 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 | :-------- | :------- | :--------------------------------------------------- |
 | `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
 
+#### Retorna todas as CRM
+
+```http
+  GET /api/v1/crm
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna um item
+
+```http
+  GET /api/v1/crm/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                   |
+| :-------- | :------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+
+#### Cria uma CRM
+
+```http
+  POST /api/v1/crm/create
+```
+
+| Parâmetro | Tipo     | Descrição                                  |
+| :-------- | :------- | :----------------------------------------- |
+| `dataCRM` | `Objeto` | Objeto contendo todos os atributos da CRM. |
+
+#### Atualizar uma CRM
+
+```http
+  PUT /api/v1/crm/update/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                                  |
+| :-------- | :------- | :--------------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer                |
+| `dataCRM` | `Objeto` | Objeto contendo os atributos que serão atualizados de CRM. |
+
+#### Deletar uma CRM
+
+```http
+  DELETE /api/v1/crm/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
 #### Retorna todas as logisticas
 
 ```http
