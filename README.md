@@ -25,6 +25,7 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 - **Customer Management**: Create, update and delete customers. Assign customers to projects. Manage customer settings such as contact information, billing address, and shipping address.
 - **CRM Management**: Create, update and delete CRM records. Assign CRM records to customers. Manage CRM settings such as contact information, notes, and follow-up dates.
 - **Logistics Management**: Create, update and delete logistics records. Assign logistics records to projects. Manage logistics settings such as shipping information, tracking number, and delivery date.
+- **Meeting Management**: Create, update and delete meetings. Assign meetings to users. Manage meeting settings such as start date, end date, and location.
 
 ## Documentação da API
 
@@ -216,6 +217,89 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 
 ```http
   DELETE /api/v1/logistics/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todas as Meetings
+
+```http
+  GET /api/v1/meeting
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna uma meeting
+
+```http
+  GET /api/v1/meeting/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                   |
+| :-------- | :------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+
+#### Retorna sua meeting
+
+```http
+  GET /api/v1/meeting/user/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                   |
+| :-------- | :------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+
+#### Cria um Meeting
+
+```http
+  POST /api/v1/meeting/create
+```
+
+| Parâmetro     | Tipo     | Descrição                                      |
+| :------------ | :------- | :--------------------------------------------- |
+| `dataMeeting` | `Objeto` | Objeto contendo todos os atributos da meeting. |
+
+#### Atualizar uma Meeting
+
+```http
+  PUT /api/v1/meeting/update/${id}
+```
+
+| Parâmetro     | Tipo     | Descrição                                                      |
+| :------------ | :------- | :------------------------------------------------------------- |
+| `id`          | `string` | **Obrigatório**. O ID do item que você quer                    |
+| `dataMeeting` | `Objeto` | Objeto contendo os atributos que serão atualizados da meeting. |
+
+#### Atualizar uma Meeting, Adicionar um participante
+
+```http
+  PUT /api/v1/meeting/update/addparticipant/${id}
+```
+
+| Parâmetro     | Tipo     | Descrição                                                      |
+| :------------ | :------- | :------------------------------------------------------------- |
+| `id`          | `string` | **Obrigatório**. O ID do item que você quer                    |
+| `dataMeeting` | `Objeto` | Objeto contendo os atributos que serão atualizados da meeting. |
+
+#### Atualizar uma Meeting, remover um participante
+
+```http
+  PUT /api/v1/meeting/update/removeparticipant/${id}
+```
+
+| Parâmetro     | Tipo     | Descrição                                                      |
+| :------------ | :------- | :------------------------------------------------------------- |
+| `id`          | `string` | **Obrigatório**. O ID do item que você quer                    |
+| `dataMeeting` | `Objeto` | Objeto contendo os atributos que serão atualizados da meeting. |
+
+#### Deletar uma Meeting
+
+```http
+  DELETE /api/v1/meeting/delete/${id}/${userId}
 ```
 
 | Parâmetro | Tipo     | Descrição                                            |
