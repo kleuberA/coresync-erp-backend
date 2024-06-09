@@ -26,6 +26,7 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 - **CRM Management**: Create, update and delete CRM records. Assign CRM records to customers. Manage CRM settings such as contact information, notes, and follow-up dates.
 - **Logistics Management**: Create, update and delete logistics records. Assign logistics records to projects. Manage logistics settings such as shipping information, tracking number, and delivery date.
 - **Meeting Management**: Create, update and delete meetings. Assign meetings to users. Manage meeting settings such as start date, end date, and location.
+- **Product Management**: Create, update and delete products. Assign products to projects. Manage product settings such as name, description, and price.
 
 ## Documentação da API
 
@@ -305,3 +306,55 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 | Parâmetro | Tipo     | Descrição                                            |
 | :-------- | :------- | :--------------------------------------------------- |
 | `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todos os Products
+
+```http
+  GET /api/v1/product
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna um product
+
+```http
+  GET /api/v1/product/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                   |
+| :-------- | :------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer |
+
+#### Cria um Product
+
+```http
+  POST /api/v1/product/create
+```
+
+| Parâmetro     | Tipo     | Descrição                                      |
+| :------------ | :------- | :--------------------------------------------- |
+| `dataProduct` | `Objeto` | Objeto contendo todos os atributos do product. |
+
+#### Atualizar um Product
+
+```http
+  PUT /api/v1/product/update/${id}
+```
+
+| Parâmetro     | Tipo     | Descrição                                                      |
+| :------------ | :------- | :------------------------------------------------------------- |
+| `id`          | `string` | **Obrigatório**. O ID do item que você quer                    |
+| `dataProduct` | `Objeto` | Objeto contendo os atributos que serão atualizados de product. |
+
+#### Deletar um Product
+
+```http
+  DELETE /api/v1/product/delete/${id}/${userId}
+```
+
+| Parâmetro | Tipo     | Descrição                                                                |
+| :-------- | :------- | :----------------------------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar.                     |
+| `userId`  | `string` | **Obrigatório**. O ID do usuario que você quer está deletando o product. |
