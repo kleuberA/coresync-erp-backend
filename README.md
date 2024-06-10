@@ -38,6 +38,7 @@ To run this project, you will need to add the following environment variables to
 - **Meeting Management**: Create, update and delete meetings. Assign meetings to users. Manage meeting settings such as start date, end date, and location.
 - **Product Management**: Create, update and delete products. Assign products to projects. Manage product settings such as name, description, and price.
 - **Production Management**: Create, update and delete production records. Assign production records to projects. Manage production settings such as start date, end date, and quantity.
+- **Role Management**: Create, update and delete roles. Assign roles to users. Manage role settings such as name, description, and permissions.
 
 ## 📘 Documentação da API
 
@@ -468,6 +469,57 @@ To run this project, you will need to add the following environment variables to
 
 ```http
   DELETE /api/v1/project/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todos os Roles
+
+```http
+  GET /api/v1/role
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna um Role
+
+```http
+  GET /api/v1/getRolesCompany/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                           |
+| :-------- | :------- | :-------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer buscar. |
+
+#### Criar um Role
+
+```http
+  POST /api/v1/role/create
+```
+
+| Parâmetro  | Tipo     | Descrição                                   |
+| :--------- | :------- | :------------------------------------------ |
+| `dataRole` | `Objeto` | Objeto contendo todos os atributos do role. |
+
+#### Atualizar um Role
+
+```http
+  PUT /api/v1/role/update/${id}
+```
+
+| Parâmetro  | Tipo     | Descrição                                                   |
+| :--------- | :------- | :---------------------------------------------------------- |
+| `id`       | `string` | **Obrigatório**. O ID do item que você quer                 |
+| `dataRole` | `Objeto` | Objeto contendo os atributos que serão atualizados do role. |
+
+#### Deletar um Role
+
+```http
+  DELETE /api/v1/role/delete/${id}
 ```
 
 | Parâmetro | Tipo     | Descrição                                            |
