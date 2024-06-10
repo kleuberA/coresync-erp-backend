@@ -17,7 +17,17 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 - **Conventional Commits** for commit message convention.
 - **TypeScript** for type safety.
 
-## Features
+## 📚 Environment variables
+
+To run this project, you will need to add the following environment variables to your .env
+
+`DATABASE_URL="file:./dev.db"`
+
+`JWT_SECRET="SECRET KEY"`
+
+`FRONTEND_URL="http://localhost:3001"`
+
+## 💻 Features
 
 - **User Management**: Create, update and delete users with different roles and permissions. Assign user to multiple companies or projects.
 - **Company Management**: Create, update and delete companies. Assign users to companies. Manage company settings such as currency, language, and time zone.
@@ -29,7 +39,7 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 - **Product Management**: Create, update and delete products. Assign products to projects. Manage product settings such as name, description, and price.
 - **Production Management**: Create, update and delete production records. Assign production records to projects. Manage production settings such as start date, end date, and quantity.
 
-## Documentação da API
+## 📘 Documentação da API
 
 #### Retorna todas as companys
 
@@ -412,3 +422,54 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 | `id`        | `string` | **Obrigatório**. O ID do item que você quer deletar.                                                |
 | `userId`    | `string` | **Obrigatório**. O ID do usuario para verificar se possui permissão de está deletando a production. |
 | `companyId` | `string` | **Obrigatório**. O ID da company que você quer está deletando a production.                         |
+
+#### Retorna todos os Projects
+
+```http
+  GET /api/v1/project
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna um project
+
+```http
+  GET /api/v1/project/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                           |
+| :-------- | :------- | :-------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer buscar. |
+
+#### Criar um project
+
+```http
+  POST /api/v1/project/create
+```
+
+| Parâmetro     | Tipo     | Descrição                                      |
+| :------------ | :------- | :--------------------------------------------- |
+| `dataProject` | `Objeto` | Objeto contendo todos os atributos do project. |
+
+#### Atualizar um project
+
+```http
+  PUT /api/v1/project/update/${id}
+```
+
+| Parâmetro     | Tipo     | Descrição                                                      |
+| :------------ | :------- | :------------------------------------------------------------- |
+| `id`          | `string` | **Obrigatório**. O ID do item que você quer                    |
+| `dataProject` | `Objeto` | Objeto contendo os atributos que serão atualizados do project. |
+
+#### Deletar uma project
+
+```http
+  DELETE /api/v1/project/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
