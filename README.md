@@ -27,6 +27,7 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 - **Logistics Management**: Create, update and delete logistics records. Assign logistics records to projects. Manage logistics settings such as shipping information, tracking number, and delivery date.
 - **Meeting Management**: Create, update and delete meetings. Assign meetings to users. Manage meeting settings such as start date, end date, and location.
 - **Product Management**: Create, update and delete products. Assign products to projects. Manage product settings such as name, description, and price.
+- **Production Management**: Create, update and delete production records. Assign production records to projects. Manage production settings such as start date, end date, and quantity.
 
 ## Documentação da API
 
@@ -358,3 +359,56 @@ CoreSync ERP is a web-based ERP system that is designed to help businesses manag
 | :-------- | :------- | :----------------------------------------------------------------------- |
 | `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar.                     |
 | `userId`  | `string` | **Obrigatório**. O ID do usuario que você quer está deletando o product. |
+
+#### Retorna todas as Productions
+
+```http
+  GET /api/v1/production
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna uma Production
+
+```http
+  GET /api/v1/production/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                           |
+| :-------- | :------- | :-------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer buscar. |
+
+#### Criar uma Production
+
+```http
+  POST /api/v1/production/create
+```
+
+| Parâmetro        | Tipo     | Descrição                                         |
+| :--------------- | :------- | :------------------------------------------------ |
+| `dataProduction` | `Objeto` | Objeto contendo todos os atributos da production. |
+
+#### Atualizar uma Production
+
+```http
+  PUT /api/v1/production/update/${id}
+```
+
+| Parâmetro        | Tipo     | Descrição                                                         |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `id`             | `string` | **Obrigatório**. O ID do item que você quer                       |
+| `dataProduction` | `Objeto` | Objeto contendo os atributos que serão atualizados de production. |
+
+#### Deletar uma Production
+
+```http
+  DELETE /api/v1/production/delete/${id}/${userId}/${companyId}
+```
+
+| Parâmetro   | Tipo     | Descrição                                                                                           |
+| :---------- | :------- | :-------------------------------------------------------------------------------------------------- |
+| `id`        | `string` | **Obrigatório**. O ID do item que você quer deletar.                                                |
+| `userId`    | `string` | **Obrigatório**. O ID do usuario para verificar se possui permissão de está deletando a production. |
+| `companyId` | `string` | **Obrigatório**. O ID da company que você quer está deletando a production.                         |
