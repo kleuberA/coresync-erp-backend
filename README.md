@@ -39,6 +39,7 @@ To run this project, you will need to add the following environment variables to
 - **Product Management**: Create, update and delete products. Assign products to projects. Manage product settings such as name, description, and price.
 - **Production Management**: Create, update and delete production records. Assign production records to projects. Manage production settings such as start date, end date, and quantity.
 - **Role Management**: Create, update and delete roles. Assign roles to users. Manage role settings such as name, description, and permissions.
+- **Sales Order Management**: Create, update and delete sales orders. Assign sales orders to projects. Manage sales order settings such as order date, delivery date, and total amount.
 
 ## 📘 Documentação da API
 
@@ -525,3 +526,57 @@ To run this project, you will need to add the following environment variables to
 | Parâmetro | Tipo     | Descrição                                            |
 | :-------- | :------- | :--------------------------------------------------- |
 | `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todos os Sales Order
+
+```http
+  GET /api/v1/salesorder
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna um Sales Order
+
+```http
+  GET /api/v1/salesorder/${id}/${companyId}
+```
+
+| Parâmetro   | Tipo     | Descrição                                                          |
+| :---------- | :------- | :----------------------------------------------------------------- |
+| `id`        | `string` | **Obrigatório**. O ID do item que você quer buscar.                |
+| `companyId` | `string` | **Obrigatório**. O ID do da company que ta sendo feito essa busca. |
+
+#### Criar um Sales Order
+
+```http
+  POST /api/v1/role/salesorder
+```
+
+| Parâmetro        | Tipo     | Descrição                                          |
+| :--------------- | :------- | :------------------------------------------------- |
+| `dataSalesOrder` | `Objeto` | Objeto contendo todos os atributos do sales order. |
+
+#### Atualizar um Sales Order
+
+```http
+  PUT /api/v1/role/salesorder/${id}
+```
+
+| Parâmetro        | Tipo     | Descrição                                                          |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `id`             | `string` | **Obrigatório**. O ID do item que você quer                        |
+| `dataSalesOrder` | `Objeto` | Objeto contendo os atributos que serão atualizados do sales order. |
+
+#### Deletar um Sales Order
+
+```http
+  DELETE /api/v1/salesorder/delete/${id}/${companyId}/${userId}
+```
+
+| Parâmetro   | Tipo     | Descrição                                                          |
+| :---------- | :------- | :----------------------------------------------------------------- |
+| `id`        | `string` | **Obrigatório**. O ID do item que você quer deletar.               |
+| `comapnyId` | `string` | **Obrigatório**. O ID da company onde esta o sales order.          |
+| `userId`    | `string` | **Obrigatório**. O ID do usuario que esta deletando a sales order. |
