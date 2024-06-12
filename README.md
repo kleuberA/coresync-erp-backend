@@ -40,6 +40,7 @@ To run this project, you will need to add the following environment variables to
 - **Production Management**: Create, update and delete production records. Assign production records to projects. Manage production settings such as start date, end date, and quantity.
 - **Role Management**: Create, update and delete roles. Assign roles to users. Manage role settings such as name, description, and permissions.
 - **Sales Order Management**: Create, update and delete sales orders. Assign sales orders to projects. Manage sales order settings such as order date, delivery date, and total amount.
+- **Stock Management**: Create, update and delete stock records. Assign stock records to projects. Manage stock settings such as product name, quantity, and price.
 
 ## 📘 Documentação da API
 
@@ -551,7 +552,7 @@ To run this project, you will need to add the following environment variables to
 #### Criar um Sales Order
 
 ```http
-  POST /api/v1/role/salesorder
+  POST /api/v1/salesorder/create
 ```
 
 | Parâmetro        | Tipo     | Descrição                                          |
@@ -561,7 +562,7 @@ To run this project, you will need to add the following environment variables to
 #### Atualizar um Sales Order
 
 ```http
-  PUT /api/v1/role/salesorder/${id}
+  PUT /api/v1/salesorder/update/${id}
 ```
 
 | Parâmetro        | Tipo     | Descrição                                                          |
@@ -580,3 +581,54 @@ To run this project, you will need to add the following environment variables to
 | `id`        | `string` | **Obrigatório**. O ID do item que você quer deletar.               |
 | `comapnyId` | `string` | **Obrigatório**. O ID da company onde esta o sales order.          |
 | `userId`    | `string` | **Obrigatório**. O ID do usuario que esta deletando a sales order. |
+
+#### Retorna todos os Stocks
+
+```http
+  GET /api/v1/stock
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna um Stock
+
+```http
+  GET /api/v1/stock/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                           |
+| :-------- | :------- | :-------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer buscar. |
+
+#### Criar um Stock
+
+```http
+  POST /api/v1/stock/create
+```
+
+| Parâmetro   | Tipo     | Descrição                                    |
+| :---------- | :------- | :------------------------------------------- |
+| `dataStock` | `Objeto` | Objeto contendo todos os atributos do stock. |
+
+#### Atualizar um Stock
+
+```http
+  PUT /api/v1/stock/update/${id}
+```
+
+| Parâmetro   | Tipo     | Descrição                                                    |
+| :---------- | :------- | :----------------------------------------------------------- |
+| `id`        | `string` | **Obrigatório**. O ID do item que você quer                  |
+| `dataStock` | `Objeto` | Objeto contendo os atributos que serão atualizados do stock. |
+
+#### Deletar um Stock
+
+```http
+  DELETE /api/v1/stock/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
