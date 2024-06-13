@@ -41,6 +41,7 @@ To run this project, you will need to add the following environment variables to
 - **Role Management**: Create, update and delete roles. Assign roles to users. Manage role settings such as name, description, and permissions.
 - **Sales Order Management**: Create, update and delete sales orders. Assign sales orders to projects. Manage sales order settings such as order date, delivery date, and total amount.
 - **Stock Management**: Create, update and delete stock records. Assign stock records to projects. Manage stock settings such as product name, quantity, and price.
+- **Supplier Management**: Create, update and delete suppliers. Assign suppliers to projects. Manage supplier settings such as contact information, billing address, and shipping address.
 
 ## 📘 Documentação da API
 
@@ -627,6 +628,57 @@ To run this project, you will need to add the following environment variables to
 
 ```http
   DELETE /api/v1/stock/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todos os Suppliers
+
+```http
+  GET /api/v1/supplier
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna um Supplier
+
+```http
+  GET /api/v1/supplier/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                           |
+| :-------- | :------- | :-------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer buscar. |
+
+#### Criar um Supplier
+
+```http
+  POST /api/v1/supplier/create
+```
+
+| Parâmetro      | Tipo     | Descrição                                       |
+| :------------- | :------- | :---------------------------------------------- |
+| `dataSupplier` | `Objeto` | Objeto contendo todos os atributos do supplier. |
+
+#### Atualizar um Supplier
+
+```http
+  PUT /api/v1/supplier/update/${id}
+```
+
+| Parâmetro      | Tipo     | Descrição                                                       |
+| :------------- | :------- | :-------------------------------------------------------------- |
+| `id`           | `string` | **Obrigatório**. O ID do item que você quer                     |
+| `dataSupplier` | `Objeto` | Objeto contendo os atributos que serão atualizados do supplier. |
+
+#### Deletar um Supplier
+
+```http
+  DELETE /api/v1/supplier/delete/${id}
 ```
 
 | Parâmetro | Tipo     | Descrição                                            |
