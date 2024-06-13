@@ -736,3 +736,44 @@ To run this project, you will need to add the following environment variables to
 | Parâmetro | Tipo     | Descrição                                            |
 | :-------- | :------- | :--------------------------------------------------- |
 | `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todos os Users
+
+```http
+  GET /api/v1/user
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Criar um User
+
+```http
+  POST /api/v1/user/create
+```
+
+| Parâmetro  | Tipo     | Descrição                                   |
+| :--------- | :------- | :------------------------------------------ |
+| `dataUser` | `Objeto` | Objeto contendo todos os atributos do user. |
+
+#### Atualizar um User
+
+```http
+  PUT /api/v1/user/update/${id}
+```
+
+| Parâmetro  | Tipo     | Descrição                                                   |
+| :--------- | :------- | :---------------------------------------------------------- |
+| `id`       | `string` | **Obrigatório**. O ID do item que você quer                 |
+| `dataUser` | `Objeto` | Objeto contendo os atributos que serão atualizados do user. |
+
+#### Deletar um User
+
+```http
+  DELETE /api/v1/user/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
