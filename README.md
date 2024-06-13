@@ -42,6 +42,7 @@ To run this project, you will need to add the following environment variables to
 - **Sales Order Management**: Create, update and delete sales orders. Assign sales orders to projects. Manage sales order settings such as order date, delivery date, and total amount.
 - **Stock Management**: Create, update and delete stock records. Assign stock records to projects. Manage stock settings such as product name, quantity, and price.
 - **Supplier Management**: Create, update and delete suppliers. Assign suppliers to projects. Manage supplier settings such as contact information, billing address, and shipping address.
+- **Task Management**: Create, update and delete tasks. Assign tasks to projects. Manage task settings such as start date, end date, and status.
 
 ## 📘 Documentação da API
 
@@ -679,6 +680,57 @@ To run this project, you will need to add the following environment variables to
 
 ```http
   DELETE /api/v1/supplier/delete/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                            |
+| :-------- | :------- | :--------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer deletar. |
+
+#### Retorna todas as Tasks
+
+```http
+  GET /api/v1/task
+```
+
+| Parâmetro | Tipo     | Descrição                           |
+| :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Obrigatório**. A chave da sua API |
+
+#### Retorna uma Task
+
+```http
+  GET /api/v1/task/${id}
+```
+
+| Parâmetro | Tipo     | Descrição                                           |
+| :-------- | :------- | :-------------------------------------------------- |
+| `id`      | `string` | **Obrigatório**. O ID do item que você quer buscar. |
+
+#### Criar uma Task
+
+```http
+  POST /api/v1/task/create
+```
+
+| Parâmetro  | Tipo     | Descrição                                   |
+| :--------- | :------- | :------------------------------------------ |
+| `dataTask` | `Objeto` | Objeto contendo todos os atributos da task. |
+
+#### Atualizar uma Task
+
+```http
+  PUT /api/v1/task/update/${id}
+```
+
+| Parâmetro  | Tipo     | Descrição                                                   |
+| :--------- | :------- | :---------------------------------------------------------- |
+| `id`       | `string` | **Obrigatório**. O ID do item que você quer                 |
+| `dataTask` | `Objeto` | Objeto contendo os atributos que serão atualizados da task. |
+
+#### Deletar uma Task
+
+```http
+  DELETE /api/v1/task/delete/${id}
 ```
 
 | Parâmetro | Tipo     | Descrição                                            |
